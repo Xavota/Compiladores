@@ -1,0 +1,10 @@
+var a,b[3],c:int;
+
+function function_one() : int
+{
+  return 0;
+}
+
+main()
+{
+}
