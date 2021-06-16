@@ -21,7 +21,7 @@ cli::array<String^>^ Compilador::Manager::Compilar(String^ codigoFuente)
 	bool completed = m_lexicAnalizer->Parce((const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(codigoFuente).ToPointer());
 
 	std::vector<Token> tokens = m_lexicAnalizer->GetTokens();
-	cli::array<String^>^ errors = m_erroManager->GetErrors();
+	cli::array<Error^>^ errors = m_erroManager->GetErrors();
 
 	int stringCount = 4;
 	stringCount += tokens.size();
@@ -94,7 +94,7 @@ cli::array<String^>^ Compilador::Manager::Compilar(String^ codigoFuente)
 
 	for (int i = 0; i < m_erroManager->GetErrorCount(); i++)
 	{
-		detallesDeCompilacion[offset++] = errors[i];
+		detallesDeCompilacion[offset++] = errors[i]->m_errorString;
 	}
 
 	detallesDeCompilacion[offset++] = gcnew String("@Comments");

@@ -120,6 +120,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnalizadorLexico.h" />
+    <ClInclude Include="AnalizadorSintactico.h" />
     <ClInclude Include="CharState.h" />
     <ClInclude Include="Compilador.h" />
     <ClInclude Include="ErrorManager.h" />
@@ -133,11 +134,19 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="RelationOpState.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SintaxState.h" />
     <ClInclude Include="StringState.h" />
+    <ClInclude Include="Symbol.h" />
+    <ClInclude Include="SymbolTable.h" />
+    <ClInclude Include="Syn_FunctionsState.h" />
+    <ClInclude Include="Syn_MainState.h" />
+    <ClInclude Include="Syn_ProgramState.h" />
+    <ClInclude Include="Syn_VariablesState.h" />
     <ClInclude Include="Token.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalizadorLexico.cpp" />
+    <ClCompile Include="AnalizadorSintactico.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="CharState.cpp" />
     <ClCompile Include="Compilador.cpp" />
@@ -156,7 +165,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RelationOpState.cpp" />
+    <ClCompile Include="SintaxState.cpp" />
     <ClCompile Include="StringState.cpp" />
+    <ClCompile Include="Symbol.cpp" />
+    <ClCompile Include="SymbolTable.cpp" />
+    <ClCompile Include="Syn_FunctionsState.cpp" />
+    <ClCompile Include="Syn_MainState.cpp" />
+    <ClCompile Include="Syn_ProgramState.cpp" />
+    <ClCompile Include="Syn_VariablesState.cpp" />
     <ClCompile Include="Token.cpp" />
   </ItemGroup>
   <ItemGroup>

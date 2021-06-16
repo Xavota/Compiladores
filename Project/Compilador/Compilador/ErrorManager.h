@@ -5,20 +5,35 @@ using namespace System;
 
 namespace Compilador
 {
+
+	enum class eERROR_TYPE
+	{
+		NONE = -1,
+		LEXIC,
+		SYNTACTIC,
+		COUNT
+	};
+
+	ref struct Error
+	{
+		String^ m_errorString;
+		eERROR_TYPE m_type;
+	};
+
 ref class ErrorManager
 {
 public:
 	ErrorManager();
 	~ErrorManager();
 
-	bool AddError(String^ err);
-	cli::array<String^>^ GetErrors() { return m_errors; }
+	bool AddError(String^ err, eERROR_TYPE type);
+	cli::array<Error^>^ GetErrors() { return m_errors; }
 	unsigned int GetErrorCount() { return m_errorCount; }
 
 	void Clean();
 
 private:
 	unsigned int m_errorCount = 0;
-	cli::array<String^>^ m_errors;
+	cli::array<Error^>^ m_errors;
 };
 }

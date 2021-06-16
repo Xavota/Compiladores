@@ -22,8 +22,9 @@ namespace Compilador
 		SEPARATOR, // Ya
 		GROUPING, // Ya
 		DIMENSION, // Ya
-		ASSIGNMENT // Ya
-
+		ASSIGNMENT, // Ya
+		END,
+		COUNT
 	};
 	class Token
 	{

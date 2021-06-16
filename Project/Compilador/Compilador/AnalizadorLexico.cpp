@@ -33,6 +33,8 @@ bool Compilador::AnalizadorLexico::Parce(const char* sourceCode)
         }
     }
     lState->EndOfFile(this);
+
+    AddToken(m_curentLine, "", eTOKEN_TYPE::END);
     return true;
 }
 
@@ -60,7 +62,7 @@ char Compilador::AnalizadorLexico::GetCaractersBack(int putback)
 
 bool Compilador::AnalizadorLexico::AddError(string errorString)
 {
-    return m_errorManager->AddError(gcnew String(errorString.c_str()));
+    return m_errorManager->AddError(gcnew String(errorString.c_str()), eERROR_TYPE::LEXIC);
 }
 
 void Compilador::AnalizadorLexico::Clean()

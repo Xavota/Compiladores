@@ -63,6 +63,30 @@
     <ClInclude Include="MLCommentState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AnalizadorSintactico.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SintaxState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Syn_ProgramState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Syn_VariablesState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Syn_FunctionsState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Syn_MainState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compilador.cpp">
@@ -111,6 +135,30 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MLCommentState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalizadorSintactico.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SintaxState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_ProgramState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_VariablesState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_FunctionsState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_MainState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

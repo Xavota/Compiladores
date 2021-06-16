@@ -9,33 +9,40 @@ Compilador::ErrorManager::~ErrorManager()
 {
 }
 
-bool Compilador::ErrorManager::AddError(String^ err)
+bool Compilador::ErrorManager::AddError(String^ err, eERROR_TYPE type)
 {
-	cli::array<String^>^ temp = gcnew cli::array<String^>(m_errorCount);
+	cli::array<Error^>^ temp = gcnew cli::array<Error^>(m_errorCount);
 	for (int i = 0; i < m_errorCount; i++)
 	{
 		temp[i] = m_errors[i];
 	}
 
 	delete[] m_errors;
-	m_errors = gcnew cli::array<String^>(++m_errorCount);
+	m_errors = gcnew cli::array<Error^>(++m_errorCount);
 
 	for (int i = 0; i < m_errorCount - 1; i++)
 	{
 		m_errors[i] = temp[i];
 	}
-	m_errors[m_errorCount - 1] = err;
+	m_errors[m_errorCount - 1]->m_errorString = err;
+	m_errors[m_errorCount - 1]->m_type = type;
 
-	if (m_errorCount >= 10)
+	int errorsFromType = 0;
+
+	for (int i = 0; i < m_errorCount; i++)
 	{
-		return false;
+		if (m_errors[i]->m_type == type)
+		{
+			errorsFromType++;
+		}
 	}
-	return true;
+
+	return errorsFromType < 10;
 }
 
 void Compilador::ErrorManager::Clean()
 {
 	m_errorCount = 0;
 	delete m_errors;
-	m_errors = gcnew cli::array<String ^>(0);
+	m_errors = gcnew cli::array<Error^>(0);
 }
