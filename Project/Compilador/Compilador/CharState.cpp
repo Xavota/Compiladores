@@ -33,6 +33,7 @@ namespace Compilador
 				errorMsg.append(m_buffer);
 				errorMsg.append(") on line ");
 				errorMsg.append(to_string(lexic->GetLine()));
+				//delete this;
 				if (lexic->AddError(errorMsg))
 					return new InitState("");
 				else
@@ -47,6 +48,7 @@ namespace Compilador
 			errorMsg.append(m_buffer);
 			errorMsg.append(") on line ");
 			errorMsg.append(to_string(lexic->GetLine()));
+			//delete this;
 			if (lexic->AddError(errorMsg))
 				return new InitState("");
 			else
@@ -61,6 +63,7 @@ namespace Compilador
 				errorMsg.append(m_buffer);
 				errorMsg.append(") on line ");
 				errorMsg.append(to_string(lexic->GetLine()));
+				//delete this;
 				if (lexic->AddError(errorMsg))
 					return new InitState("");
 				else
@@ -69,6 +72,7 @@ namespace Compilador
 			m_buffer += c;
 			return this;
 		}
+		//delete this;
 		return nullptr;
 	}
 	void CharState::EndOfFile(AnalizadorLexico* lexic)

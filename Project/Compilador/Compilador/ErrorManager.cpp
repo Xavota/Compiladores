@@ -24,8 +24,7 @@ bool Compilador::ErrorManager::AddError(String^ err, eERROR_TYPE type)
 	{
 		m_errors[i] = temp[i];
 	}
-	m_errors[m_errorCount - 1]->m_errorString = err;
-	m_errors[m_errorCount - 1]->m_type = type;
+	m_errors[m_errorCount - 1] = gcnew Error(err, type);
 
 	int errorsFromType = 0;
 

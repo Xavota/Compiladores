@@ -11,5 +11,6 @@ namespace Compilador
 	}
 	bool Syn_FunctionsState::Update(AnalizadorSintactico* syntactic)
 	{
+		return true;
 	}
 }

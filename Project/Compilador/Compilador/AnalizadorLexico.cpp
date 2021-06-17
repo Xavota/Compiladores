@@ -23,7 +23,10 @@ bool Compilador::AnalizadorLexico::Parce(const char* sourceCode)
         m_currentChar = i;
 
         int putback = 0;
-        lState = lState->NextChar(sourceCode[i], putback, this);
+        LexicState* lS = lState->NextChar(sourceCode[i], putback, this);
+        
+        //delete lState;
+        lState = lS;
 
         i -= putback;   
 

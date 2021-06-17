@@ -50,8 +50,10 @@ LexicState* InitState::NextChar(char c, int& putback, AnalizadorLexico* lexic)
 	else if (isDigit(c))
 	{
 		m_buffer += c;
+		string a;
+		a += c;
 		//delete this;
-		return new IntegerState(m_buffer);
+		return new IntegerState(a);
 	}
 	else if (c == '.')
 	{
@@ -133,11 +135,13 @@ LexicState* InitState::NextChar(char c, int& putback, AnalizadorLexico* lexic)
 		errorMsg.append(m_buffer);
 		errorMsg.append("' on line ");
 		errorMsg.append(to_string(lexic->GetLine()));
+		//delete this;
 		if (lexic->AddError(errorMsg))
 			return new InitState("");
 		else
 			return nullptr;
 	}
+	//delete this;
     return nullptr;
 }
 void InitState::EndOfFile(AnalizadorLexico* lexic)

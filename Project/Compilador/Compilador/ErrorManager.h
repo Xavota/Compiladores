@@ -16,6 +16,11 @@ namespace Compilador
 
 	ref struct Error
 	{
+		Error(String^ errorString, eERROR_TYPE type)
+		{
+			m_errorString = errorString;
+			m_type = type;
+		}
 		String^ m_errorString;
 		eERROR_TYPE m_type;
 	};

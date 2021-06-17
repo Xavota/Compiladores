@@ -6,6 +6,7 @@ namespace Compilador
 	class Symbol
 	{
 	public:
+		Symbol() = default;
 		Symbol(std::string name, std::string cathegory, int dimension, std::string functionName, std::string type);
 		~Symbol();
 

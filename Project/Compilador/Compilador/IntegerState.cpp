@@ -44,7 +44,8 @@ LexicState* IntegerState::NextChar(char c, int& putback, AnalizadorLexico* lexic
         }
         //delete this;
         return new InitState("");
-    }
+	}
+	//delete this;
     return nullptr;
 }
 void IntegerState::EndOfFile(AnalizadorLexico* lexic)

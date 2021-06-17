@@ -37,7 +37,8 @@ LexicState* FloatState::NextChar(char c, int& putback, AnalizadorLexico* lexic)
             string errorMsg = "Invalid float constant: '";
             errorMsg.append(m_buffer);
             errorMsg.append("' on line ");
-            errorMsg.append(to_string(lexic->GetLine()));
+			errorMsg.append(to_string(lexic->GetLine()));
+			//delete this;
 			if (lexic->AddError(errorMsg))
 				return new InitState("");
 			else
@@ -45,7 +46,8 @@ LexicState* FloatState::NextChar(char c, int& putback, AnalizadorLexico* lexic)
         }
         //delete this;
         return new InitState("");
-    }
+	}
+	//delete this;
     return nullptr;
 }
 void FloatState::EndOfFile(AnalizadorLexico* lexic)
