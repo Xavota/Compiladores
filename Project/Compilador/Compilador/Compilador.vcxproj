@@ -141,6 +141,7 @@
     <ClInclude Include="Syn_FunctionsState.h" />
     <ClInclude Include="Syn_MainState.h" />
     <ClInclude Include="Syn_ProgramState.h" />
+    <ClInclude Include="Syn_VariableLineState.h" />
     <ClInclude Include="Syn_VariablesState.h" />
     <ClInclude Include="Token.h" />
   </ItemGroup>
@@ -172,6 +173,7 @@
     <ClCompile Include="Syn_FunctionsState.cpp" />
     <ClCompile Include="Syn_MainState.cpp" />
     <ClCompile Include="Syn_ProgramState.cpp" />
+    <ClCompile Include="Syn_VariableLineState.cpp" />
     <ClCompile Include="Syn_VariablesState.cpp" />
     <ClCompile Include="Token.cpp" />
   </ItemGroup>

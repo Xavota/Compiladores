@@ -37,7 +37,7 @@ LexicState* InitState::NextChar(char c, int& putback, AnalizadorLexico* lexic)
 	{
 		m_buffer += c;
 		//delete this;
-		if (isLetter(lexic->GetCaractersBack(1)) || isDigit(lexic->GetCaractersBack(1)))
+		if (isLetter(lexic->GetCaractersBack(1)) || isDigit(lexic->GetCaractersBack(1)) || lexic->GetCaractersBack(1) == ')' || lexic->GetCaractersBack(1) == ']')
 		{
 			lexic->AddToken(lexic->GetLine(), m_buffer, eTOKEN_TYPE::ARITHMETIC_OPERATOR);
 			return new InitState("");

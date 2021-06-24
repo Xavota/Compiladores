@@ -9,7 +9,7 @@ namespace Compilador
 		Syn_VariablesState();
 		~Syn_VariablesState();
 
-		bool Update(AnalizadorSintactico* syntactic);
+		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
 	private:
 		
 	};

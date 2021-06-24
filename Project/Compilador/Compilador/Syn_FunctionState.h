@@ -3,14 +3,14 @@
 
 namespace Compilador
 {
-	class Syn_ProgramState : public SyntaxState
+	class Syn_FunctionState : public SyntaxState
 	{
 	public:
-		Syn_ProgramState();
-		~Syn_ProgramState();
-	
+		Syn_FunctionState();
+		~Syn_FunctionState();
+
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
 	private:
-		
+
 	};
 }

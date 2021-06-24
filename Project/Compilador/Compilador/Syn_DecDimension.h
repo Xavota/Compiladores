@@ -3,14 +3,14 @@
 
 namespace Compilador
 {
-	class Syn_ProgramState : public SyntaxState
+	class Syn_DecDimension : public SyntaxState
 	{
 	public:
-		Syn_ProgramState();
-		~Syn_ProgramState();
-	
+		Syn_DecDimension(int* dim);
+		~Syn_DecDimension();
+
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
 	private:
-		
+		int* m_dim;
 	};
 }

@@ -15,7 +15,7 @@ namespace Compilador
 	{
 	}
 
-	bool Syn_ProgramState::Update(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_ProgramState::Update(AnalizadorSintactico* syntactic)
 	{
 		bool hasMain = false;
 		bool hasFunctions = false;
@@ -39,19 +39,24 @@ namespace Compilador
 				{
 					if (!syntactic->AddError("Global variables must be after functions"))
 					{
-						return false;
+						return eRETURN_STATE::FATAL;
 					}
 				}
 				if (hasMain)
 				{
 					if (!syntactic->AddError("Global variables must be after main"))
 					{
-						return false;
+						return eRETURN_STATE::FATAL;
 					}
 				}
 
+				syntactic->Putback(1);
 				state = new Syn_VariablesState();
-				state->Update(syntactic);
+				if (state->Update(syntactic) == eRETURN_STATE::FATAL)
+				{
+					delete state;
+					return eRETURN_STATE::FATAL;
+				}
 
 				delete state;
 				state = nullptr;
@@ -74,12 +79,18 @@ namespace Compilador
 				{
 					if (!syntactic->AddError("Functions must be after main"))
 					{
-						return false;
+						return eRETURN_STATE::FATAL;
 					}
 				}
 
+				syntactic->Putback(1);
 				state = new Syn_FunctionsState();
-				state->Update(syntactic);
+				if (state->Update(syntactic) == eRETURN_STATE::FATAL)
+				{
+					delete state;
+					return eRETURN_STATE::FATAL;
+				}
+				hasFunctions = true;
 
 				delete state;
 				state = nullptr;
@@ -99,7 +110,11 @@ namespace Compilador
 			if (tok.GetType() == eTOKEN_TYPE::KEY_WORD && tok.GetLexeme() == "main")
 			{
 				state = new Syn_FunctionsState();
-				state->Update(syntactic);
+				if (state->Update(syntactic) == eRETURN_STATE::FATAL)
+				{
+					delete state;
+					return eRETURN_STATE::FATAL;
+				}
 				hasMain = true;
 
 				delete state;
@@ -131,7 +146,7 @@ namespace Compilador
 				errorMsg.append(to_string(tok.GetLine()));
 				if (!syntactic->AddError(errorMsg))
 				{
-					return false;
+					return eRETURN_STATE::FATAL;
 				}
 			}
 		}
@@ -142,10 +157,10 @@ namespace Compilador
 		{
 			if (!syntactic->AddError("Main function is missing"))
 			{
-				return false;
+				return eRETURN_STATE::FATAL;
 			}
 		}
 
-		return true;
+		return eRETURN_STATE::GOOD;
 	}
 }
