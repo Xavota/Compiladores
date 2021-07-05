@@ -13,7 +13,7 @@ namespace Compilador
 	eRETURN_STATE Syn_Parameters::Update(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
-		while (!(tok.GetType() == eTOKEN_TYPE::GROUPING && tok.GetLexeme() == ")"))
+		while (tok.GetLexeme() != ")")
 		{
 			bool moreID = true;
 			bool correct = false;
@@ -33,12 +33,20 @@ namespace Compilador
 					{
 						return eRETURN_STATE::FATAL;
 					}
-					// Enter panik
+
+					// Panik mode
+					while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "," && tok.GetLexeme() != "}")
+					{
+						tok = syntactic->GetNextToken();
+					}
+					moreID = false;
+					correct = false;
+					break;
 				}
 				
 				tok = syntactic->GetNextToken();
 
-				if (tok.GetType() == eTOKEN_TYPE::DIMENSION && tok.GetLexeme() == "[")
+				if (tok.GetLexeme() == "[")
 				{
 					int dim = 0;
 					SyntaxState* state = new Syn_DecDimension(&dim);
@@ -52,6 +60,13 @@ namespace Compilador
 					{
 						dims.push_back(dim);
 					}
+					else if (r == eRETURN_STATE::BAD)
+					{
+						moreID = false;
+						correct = false;
+						delete state;
+						break;
+					}
 
 					delete state;
 				}
@@ -60,35 +75,32 @@ namespace Compilador
 					dims.push_back(0);
 				}
 
-				if (tok.GetType() == eTOKEN_TYPE::SEPARATOR && tok.GetLexeme() == ",")
+				if (tok.GetLexeme() == ",")
 				{
 					tok = syntactic->GetNextToken();
 					continue;
 				}
-				else if(tok.GetType() == eTOKEN_TYPE::SEPARATOR && tok.GetLexeme() == ":")
+				else if(tok.GetLexeme() == ":")
 				{
 					moreID = false;
 					correct = true;
 					break;
 				}
-				else if (tok.GetType() == eTOKEN_TYPE::SEPARATOR && tok.GetLexeme() == ";")
+				else if (tok.GetLexeme() == ";")
 				{
-					moreID = false;
-					correct = false;
-
 					std::string errorMsg = "Expected ':' after list of IDs at parameter declarations on line ";
 					errorMsg.append(to_string(tok.GetLine()));
 					if (!syntactic->AddError(errorMsg))
 					{
 						return eRETURN_STATE::FATAL;
 					}
+
+					moreID = false;
+					correct = false;
 					break;
 				}
 				else
 				{
-					moreID = false;
-					correct = false;
-
 					std::string errorMsg = "Expected ':' after list of IDs at parameter declarations on line ";
 					errorMsg.append(to_string(tok.GetLine()));
 					if (!syntactic->AddError(errorMsg))
@@ -96,7 +108,14 @@ namespace Compilador
 						return eRETURN_STATE::FATAL;
 					}
 
-					// Enter Panik
+
+					// Panik mode
+					while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "," && tok.GetLexeme() != "}")
+					{
+						tok = syntactic->GetNextToken();
+					}
+					moreID = false;
+					correct = false;
 					break;
 				}
 
@@ -127,9 +146,64 @@ namespace Compilador
 							syntactic->AddSymbol(Ids[i], "PARAMETER", dims[i], syntactic->GetContext(), tok.GetLexeme());
 						}
 					}
+
+					tok = syntactic->GetNextToken();
+				}
+				else
+				{
+					std::string errorMsg = "Expected varible type after ':' on line ";
+					errorMsg.append(to_string(tok.GetLine()));
+					if (!syntactic->AddError(errorMsg))
+					{
+						return eRETURN_STATE::FATAL;
+					}
+
+
+					// Panik mode
+					while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "," && tok.GetLexeme() != "}")
+					{
+						tok = syntactic->GetNextToken();
+					}
+					continue;
 				}
 			}
+
+			if (tok.GetLexeme() == ")")
+			{
+				return eRETURN_STATE::GOOD;
+			}
+			else
+			{
+				if (tok.GetLexeme() == ";")
+				{
+					tok = syntactic->GetNextToken();
+
+					continue;
+				}
+				else
+				{
+					std::string errorMsg = "Expected ';' at parameters after variable type on line ";
+					errorMsg.append(to_string(tok.GetLine()));
+					if (!syntactic->AddError(errorMsg))
+					{
+						return eRETURN_STATE::FATAL;
+					}
+
+
+					// Panik mode
+					while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "," && tok.GetLexeme() != "}")
+					{
+						tok = syntactic->GetNextToken();
+					}
+
+					tok = syntactic->GetNextToken();
+
+					continue;
+				}
+
+			}
+
 		}
-		return eRETURN_STATE::GOOD;
+		return eRETURN_STATE::BAD;
 	}
 }

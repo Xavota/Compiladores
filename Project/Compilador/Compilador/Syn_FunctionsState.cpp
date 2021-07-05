@@ -17,7 +17,7 @@ namespace Compilador
 
 		tok = syntactic->GetNextToken();
 
-		while (tok.GetType() == eTOKEN_TYPE::KEY_WORD && tok.GetLexeme() == "function")
+		while (tok.GetLexeme() == "function")
 		{
 			state = new Syn_FunctionState();
 			if (state->Update(syntactic) == eRETURN_STATE::FATAL)

@@ -17,7 +17,7 @@ namespace Compilador
 
 		tok = syntactic->GetNextToken();
 
-		while (tok.GetType() == eTOKEN_TYPE::KEY_WORD && tok.GetLexeme() == "var")
+		while (tok.GetLexeme() == "var")
 		{
 			state = new Syn_VariableLineState();
 			if (state->Update(syntactic) == eRETURN_STATE::FATAL)

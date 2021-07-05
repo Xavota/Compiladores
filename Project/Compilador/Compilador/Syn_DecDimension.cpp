@@ -17,18 +17,24 @@ namespace Compilador
 		{
 			*m_dim = atoi(tok.GetLexeme().c_str());	
 			tok = syntactic->GetNextToken();
-			if (tok.GetType() == eTOKEN_TYPE::DIMENSION && tok.GetLexeme() == "]")
+			if (tok.GetLexeme() == "]")
 			{ 
 				return eRETURN_STATE::GOOD;
 			}
 			else
 			{	
-				std::string errorMsg = "Expected ']' on declaration dimension on line ";
+				std::string errorMsg = "Expected ']' at declaration dimension on line ";
 				errorMsg.append(to_string(tok.GetLine()));
 				if (!syntactic->AddError(errorMsg))
 				{
 					return eRETURN_STATE::FATAL;
 				}
+
+				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "," && tok.GetLexeme() != "}")
+				{
+					tok = syntactic->GetNextToken();
+				}
+				return eRETURN_STATE::BAD;
 			}
 		}
 		else
@@ -41,7 +47,7 @@ namespace Compilador
 			}
 
 			tok = syntactic->GetNextToken();
-			if (tok.GetType() == eTOKEN_TYPE::DIMENSION && tok.GetLexeme() == "]")
+			if (tok.GetLexeme() == "]")
 			{
 				return  eRETURN_STATE::BAD;
 			}
@@ -53,6 +59,12 @@ namespace Compilador
 				{
 					return  eRETURN_STATE::FATAL;
 				}
+
+				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "," && tok.GetLexeme() != "}")
+				{
+					tok = syntactic->GetNextToken();
+				}
+				return eRETURN_STATE::BAD;
 			}
 		}
 		return  eRETURN_STATE::BAD;
