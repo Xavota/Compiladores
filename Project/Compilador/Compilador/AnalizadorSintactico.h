@@ -12,7 +12,7 @@ namespace Compilador
 	class AnalizadorSintactico
 	{
 	public:
-		AnalizadorSintactico(ErrorManager^ errorMan, SymbolTable* symbolTab);
+		AnalizadorSintactico(ErrorManager^ errorMan);
 		~AnalizadorSintactico();
 
 		bool Parce(std::vector<Token> tokens);
@@ -23,14 +23,14 @@ namespace Compilador
 		bool AddError(std::string errorString);
 
 		bool SymbolExist(std::string name, std::string cathegory, std::string functionName);
-		void AddSymbol(std::string name, std::string cathegory, int dimension, std::string functionName, std::string type);
+		void AddSymbol(int line, std::string name, std::string cathegory, int dimension, std::string functionName, std::string type);
 
 		void UpdateSymboltype(std::string name, std::string cathegory, std::string functionName, std::string newType);
 
 		void SetContext(std::string con);
 		std::string GetContext();
 
-	private:
+	public:
 		msclr::gcroot<ErrorManager^> m_errorManager;
 		SymbolTable* m_symbolTable;
 

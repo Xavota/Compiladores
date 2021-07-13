@@ -19,11 +19,13 @@ namespace Compilador
 			bool correct = false;
 			std::vector<std::string> Ids;
 			std::vector<int> dims;
+			std::vector<int> lines;
 			while (moreID)
 			{
 				if (tok.GetType() == eTOKEN_TYPE::ID)
 				{
 					Ids.push_back(tok.GetLexeme());
+					lines.push_back(tok.GetLine());
 				}
 				else
 				{
@@ -143,7 +145,7 @@ namespace Compilador
 						}
 						else
 						{
-							syntactic->AddSymbol(Ids[i], "PARAMETER", dims[i], syntactic->GetContext(), tok.GetLexeme());
+							syntactic->AddSymbol(lines[i], Ids[i], "PARAMETER", dims[i], syntactic->GetContext(), tok.GetLexeme());
 						}
 					}
 

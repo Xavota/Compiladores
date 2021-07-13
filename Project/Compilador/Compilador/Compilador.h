@@ -1,5 +1,6 @@
 #pragma once
 #include "AnalizadorLexico.h"
+#include "AnalizadorSintactico.h"
 #include "ErrorManager.h"
 
 using namespace System;
@@ -15,6 +16,7 @@ namespace Compilador
 		cli::array<String^>^ Compilar(String^ codigoFuente);
 	private:
 		AnalizadorLexico* m_lexicAnalizer;
+		AnalizadorSintactico* m_syntacticAnalizer;
 		ErrorManager^ m_erroManager;
 	};
 }

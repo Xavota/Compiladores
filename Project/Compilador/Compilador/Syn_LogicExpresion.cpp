@@ -15,30 +15,47 @@ namespace Compilador
 	
 	eRETURN_STATE Syn_LogicExpresion::Update(AnalizadorSintactico* syntactic)
 	{
-	    eRETURN_STATE r = Expresion(syntactic);
+	    eRETURN_STATE r = OR(syntactic);
 
 
 	
 	    return eRETURN_STATE::BAD;
+	}
+
+	eRETURN_STATE Syn_LogicExpresion::OR(AnalizadorSintactico* syntactic)
+	{
+		return eRETURN_STATE();
+	}
+
+	eRETURN_STATE Syn_LogicExpresion::AND(AnalizadorSintactico* syntactic)
+	{
+		return eRETURN_STATE();
+	}
+
+	eRETURN_STATE Syn_LogicExpresion::Equality(AnalizadorSintactico* syntactic)
+	{
+		return eRETURN_STATE();
+	}
+
+	eRETURN_STATE Syn_LogicExpresion::Inequality(AnalizadorSintactico* syntactic)
+	{
+		return eRETURN_STATE();
 	}
 	
 	eRETURN_STATE Syn_LogicExpresion::Expresion(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 		
-		if (tok.GetType() == eTOKEN_TYPE::INT_CONST || tok.GetType() == eTOKEN_TYPE::FLOAT_CONST || tok.GetType() == eTOKEN_TYPE::ID)
+
+		if (tok.GetLexeme() == "+" || tok.GetLexeme() == "-")
 		{
-			tok = syntactic->GetNextToken();
-
-			if (tok.GetLexeme() == "+" || tok.GetLexeme() == "-")
-			{
-				eRETURN_STATE r = Term(syntactic);
-			}
-			else
-			{
-
-			}
+			eRETURN_STATE r = Term(syntactic);
 		}
+		else
+		{
+			
+		}
+
 	
 		return eRETURN_STATE::BAD;
 	}
@@ -56,6 +73,21 @@ namespace Compilador
 
 
 		return eRETURN_STATE::BAD;
+	}
+
+	eRETURN_STATE Syn_LogicExpresion::UnaryNot(AnalizadorSintactico* syntactic)
+	{
+		return eRETURN_STATE();
+	}
+
+	eRETURN_STATE Syn_LogicExpresion::Unary(AnalizadorSintactico* syntactic)
+	{
+		return eRETURN_STATE();
+	}
+
+	eRETURN_STATE Syn_LogicExpresion::Dimesion(AnalizadorSintactico* syntactic)
+	{
+		return eRETURN_STATE();
 	}
 	
 	eRETURN_STATE Syn_LogicExpresion::K(AnalizadorSintactico* syntactic)

@@ -3,8 +3,9 @@
 
 namespace Compilador
 {
-	Symbol::Symbol(std::string name, std::string cathegory, int dimension, std::string functionName, std::string type)
+	Symbol::Symbol(int line, std::string name, std::string cathegory, int dimension, std::string functionName, std::string type)
 	{
+		m_line = line;
 		m_name = name;
 		m_cathegory = cathegory;
 		m_dimension = dimension;
@@ -37,15 +38,15 @@ namespace Compilador
 		return false;
 	}
 
-	void Symbol::AddNextSymbol(std::string name, std::string cathegory, int dimension, std::string functionName, std::string type)
+	void Symbol::AddNextSymbol(int line, std::string name, std::string cathegory, int dimension, std::string functionName, std::string type)
 	{
 		if (m_next != nullptr)
 		{
-			m_next->AddNextSymbol(name, cathegory, dimension, functionName, type);
+			m_next->AddNextSymbol(line, name, cathegory, dimension, functionName, type);
 		}
 		else
 		{
-			m_next = new Symbol(name, cathegory, dimension, functionName, type);
+			m_next = new Symbol(line, name, cathegory, dimension, functionName, type);
 		}
 	}
 

@@ -6,10 +6,10 @@
 
 namespace Compilador
 {
-	AnalizadorSintactico::AnalizadorSintactico(ErrorManager^ errorMan, SymbolTable* symbolTab)
+	AnalizadorSintactico::AnalizadorSintactico(ErrorManager^ errorMan)
 	{
 		m_errorManager = errorMan;
-		m_symbolTable = symbolTab;
+		m_symbolTable = new SymbolTable();
 	}
 	AnalizadorSintactico::~AnalizadorSintactico()
 	{
@@ -47,9 +47,9 @@ namespace Compilador
 	{
 		return m_symbolTable->SymbolExist(name, cathegory, functionName);
 	}
-	void AnalizadorSintactico::AddSymbol(std::string name, std::string cathegory, int dimension, std::string functionName, std::string type)
+	void AnalizadorSintactico::AddSymbol(int line, std::string name, std::string cathegory, int dimension, std::string functionName, std::string type)
 	{
-		m_symbolTable->AddSymbol(name, cathegory, dimension, functionName, type);
+		m_symbolTable->AddSymbol(line, name, cathegory, dimension, functionName, type);
 	}
 	void AnalizadorSintactico::UpdateSymboltype(std::string name, std::string cathegory, std::string functionName, std::string newType)
 	{

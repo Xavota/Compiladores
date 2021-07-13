@@ -16,21 +16,21 @@ namespace Compilador
 	{
 		if (m_symbols.find(name) != m_symbols.end())
 		{
-			return m_symbols[name].SymbolExist(name, cathegory, functionName);
+			return m_symbols[name]->SymbolExist(name, cathegory, functionName);
 		}
 			
 		return false;
 	}
 
-	void SymbolTable::AddSymbol(std::string name, std::string cathegory, int dimension, std::string functionName, std::string type)
+	void SymbolTable::AddSymbol(int line, std::string name, std::string cathegory, int dimension, std::string functionName, std::string type)
 	{
 		if (m_symbols.find(name) != m_symbols.end())
 		{
-			m_symbols[name].AddNextSymbol(name, cathegory, dimension, functionName, type);
+			m_symbols[name]->AddNextSymbol(line, name, cathegory, dimension, functionName, type);
 		}
 		else
 		{
-			m_symbols.insert(make_pair(name, Symbol(name, cathegory, dimension, functionName, type)));
+			m_symbols.insert(make_pair(name, new Symbol(line, name, cathegory, dimension, functionName, type)));
 		}
 	}
 

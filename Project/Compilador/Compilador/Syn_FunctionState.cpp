@@ -32,7 +32,7 @@ namespace Compilador
 			}
 			else
 			{
-				syntactic->AddSymbol(functName, "FUNCTION", 0, "", "int");
+				syntactic->AddSymbol(tok.GetLine(), functName, "FUNCTION", 0, "", "int");
 			}
 
 			tok = syntactic->GetNextToken();
