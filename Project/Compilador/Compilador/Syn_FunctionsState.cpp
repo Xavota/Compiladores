@@ -17,20 +17,19 @@ namespace Compilador
 
 		tok = syntactic->GetNextToken();
 
+		state = new Syn_FunctionState();
 		while (tok.GetLexeme() == "function")
 		{
-			state = new Syn_FunctionState();
 			if (state->Update(syntactic) == eRETURN_STATE::FATAL)
 			{
 				delete state;
 				return eRETURN_STATE::FATAL;
 			}
 
-			delete state;
-			state = nullptr;
-
 			tok = syntactic->GetNextToken();
 		}
+		delete state;
+		state = nullptr;
 
 		syntactic->Putback(1);
 		return eRETURN_STATE::GOOD;

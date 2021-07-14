@@ -10,6 +10,9 @@ namespace Compilador
 		~Syn_DecDimension();
 
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
+
+		eRETURN_STATE GetInt(AnalizadorSintactico* syntactic);
+		eRETURN_STATE CloseSquare(AnalizadorSintactico* syntactic);
 	private:
 		int* m_dim;
 	};

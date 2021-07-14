@@ -10,7 +10,11 @@ namespace Compilador
 		~Syn_MainState();
 
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
-	private:
 
+		eRETURN_STATE OpenParenthesis(AnalizadorSintactico* syntactic);
+		eRETURN_STATE CloseParenthesis(AnalizadorSintactico* syntactic);
+		eRETURN_STATE OpenBrackets(AnalizadorSintactico* syntactic);
+	private:
+		bool m_hasReturn = false;
 	};
 }

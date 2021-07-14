@@ -146,6 +146,7 @@ namespace Interfaz
                 txt_code.Text = "";
 
                 data_tokens.Rows.Clear();
+                data_things.Rows.Clear();
                 txt_console.Text = "";
 
             }
@@ -207,6 +208,7 @@ namespace Interfaz
                     isSaved = true;
 
                     data_tokens.Rows.Clear();
+                    data_things.Rows.Clear();
                     txt_console.Text = "";
 
                 }
@@ -331,8 +333,9 @@ namespace Interfaz
 
         private void toolStripMenuItem8_Click(object sender, EventArgs e)
         {
-
             data_tokens.Rows.Clear();
+            data_things.Rows.Clear();
+            txt_console.Text = "";
 
             String[] result = compilerDLLInstance.Compilar(txt_code.Text);
 
@@ -341,8 +344,9 @@ namespace Interfaz
             int flag = 0;
 
             int readingTokens = 1;
-            int readingErrors = 2;
-            int readingComments = 3;
+            int readingSymbols = 2;
+            int readingErrors = 3;
+            int readingComments = 4;
 
             for (int i = 0; i < result.Length; i++)
             {
@@ -350,7 +354,12 @@ namespace Interfaz
                 {
                     flag = readingTokens;
                     continue;
-                }                
+                }
+                else if (result[i] == "@Symbols")
+                {
+                    flag = readingSymbols;
+                    continue;
+                }
                 else if(result[i] == "@Errors")
                 {
                     flag = readingErrors;
@@ -397,6 +406,58 @@ namespace Interfaz
                         }
                     }
                     data_tokens.Rows.Add(line, lexeme, type);
+                }
+                else if (flag == readingSymbols)
+                {
+                    string line = "";
+                    string name = "";
+                    string cathegory = "";
+                    string length = "";
+                    string dataType = "";
+                    string function = "";
+
+                    int tokenFlag = 0;
+
+                    int readingLine = 0;
+                    int readingName = 1;
+                    int readingCathegory = 2;
+                    int readingLength = 3;
+                    int readingDataType = 4;
+                    int readingFunction = 5;
+
+                    for (int j = 0; j < result[i].Length; j++)
+                    {
+                        if (result[i][j] == '\n')
+                        {
+                            tokenFlag++;
+                        }
+
+                        if (tokenFlag == readingLine)
+                        {
+                            line += result[i][j];
+                        }
+                        else if (tokenFlag == readingName)
+                        {
+                            name += result[i][j];
+                        }
+                        else if (tokenFlag == readingCathegory)
+                        {
+                            cathegory += result[i][j];
+                        }
+                        else if (tokenFlag == readingLength)
+                        {
+                            length += result[i][j];
+                        }
+                        else if (tokenFlag == readingDataType)
+                        {
+                            dataType += result[i][j];
+                        }
+                        else if (tokenFlag == readingFunction)
+                        {
+                            function += result[i][j];
+                        }
+                    }
+                    data_things.Rows.Add(line, name, cathegory, length, dataType, function);
                 }
                 else if (flag == readingErrors)
                 {

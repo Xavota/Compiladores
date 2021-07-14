@@ -16,6 +16,8 @@ namespace Compilador
 	}
 	bool AnalizadorSintactico::Parce(std::vector<Token> tokens)
 	{
+		m_symbolTable->Clear();
+		m_currentTokenIndex = 0;
 		m_tokens = tokens;
 
 		SyntaxState* state = new Syn_ProgramState();

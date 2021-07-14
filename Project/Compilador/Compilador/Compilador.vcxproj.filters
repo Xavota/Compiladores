@@ -111,6 +111,9 @@
     <ClInclude Include="Syn_FunctionCall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Syn_FunctionBlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compilador.cpp">
@@ -207,6 +210,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Syn_FunctionCall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_FunctionBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

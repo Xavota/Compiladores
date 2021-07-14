@@ -11,31 +11,16 @@ namespace Compilador
 	{
 	}
 	eRETURN_STATE Syn_DecDimension::Update(AnalizadorSintactico* syntactic)
+	{		
+		return GetInt(syntactic);
+	}
+	eRETURN_STATE Syn_DecDimension::GetInt(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetType() == eTOKEN_TYPE::INT_CONST)
 		{
-			*m_dim = atoi(tok.GetLexeme().c_str());	
-			tok = syntactic->GetNextToken();
-			if (tok.GetLexeme() == "]")
-			{ 
-				return eRETURN_STATE::GOOD;
-			}
-			else
-			{	
-				std::string errorMsg = "Expected ']' at declaration dimension on line ";
-				errorMsg.append(to_string(tok.GetLine()));
-				if (!syntactic->AddError(errorMsg))
-				{
-					return eRETURN_STATE::FATAL;
-				}
-
-				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "," && tok.GetLexeme() != "}")
-				{
-					tok = syntactic->GetNextToken();
-				}
-				return eRETURN_STATE::BAD;
-			}
+			*m_dim = atoi(tok.GetLexeme().c_str());
+			return CloseSquare(syntactic);
 		}
 		else
 		{
@@ -44,29 +29,47 @@ namespace Compilador
 			if (!syntactic->AddError(errorMsg))
 			{
 				return  eRETURN_STATE::FATAL;
-			}
+			}			
 
-			tok = syntactic->GetNextToken();
+			//Panik mode
+			while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}" && tok.GetLexeme() != "]")
+			{
+				tok = syntactic->GetNextToken();
+			}
 			if (tok.GetLexeme() == "]")
 			{
-				return  eRETURN_STATE::BAD;
+				return eRETURN_STATE::GOOD;
 			}
-			else
-			{
-				std::string errorMsg = "Expected ']' on declaration dimension on line ";
-				errorMsg.append(to_string(tok.GetLine()));
-				if (!syntactic->AddError(errorMsg))
-				{
-					return  eRETURN_STATE::FATAL;
-				}
-
-				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "," && tok.GetLexeme() != "}")
-				{
-					tok = syntactic->GetNextToken();
-				}
-				return eRETURN_STATE::BAD;
-			}
+			return eRETURN_STATE::BAD;
 		}
-		return  eRETURN_STATE::BAD;
+		return eRETURN_STATE::BAD;
+	}
+	eRETURN_STATE Syn_DecDimension::CloseSquare(AnalizadorSintactico* syntactic)
+	{
+		Token tok = syntactic->GetNextToken();
+		if (tok.GetLexeme() == "]")
+		{
+			return eRETURN_STATE::GOOD;
+		}
+		else
+		{
+			std::string errorMsg = "Expected ']' at declaration dimension on line ";
+			errorMsg.append(to_string(tok.GetLine()));
+			if (!syntactic->AddError(errorMsg))
+			{
+				return eRETURN_STATE::FATAL;
+			}
+
+			while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}" && tok.GetLexeme() != "]")
+			{
+				tok = syntactic->GetNextToken();
+			}
+			if (tok.GetLexeme() == "]")
+			{
+				return eRETURN_STATE::GOOD;
+			}
+			return eRETURN_STATE::BAD;
+		}
+		return eRETURN_STATE::BAD;
 	}
 }

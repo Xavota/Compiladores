@@ -3,11 +3,11 @@
 
 namespace Compilador
 {
-	class Syn_Statements : public SyntaxState
+	class Syn_FunctionBlock : public SyntaxState
 	{
 	public:
-		Syn_Statements(bool* hasReturn);
-		~Syn_Statements();
+		Syn_FunctionBlock(bool* hasReturn);
+		~Syn_FunctionBlock();
 
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
 	private:

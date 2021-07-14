@@ -38,7 +38,15 @@ namespace Compilador
 	{
 		if (m_symbols.find(name) != m_symbols.end())
 		{
-			m_symbols[name].UpdateSymboltype(name, cathegory, functionName, newType);
+			m_symbols[name]->UpdateSymboltype(name, cathegory, functionName, newType);
 		}
+	}
+	void SymbolTable::Clear()
+	{
+		for (std::map<std::string, Symbol*>::iterator it = m_symbols.begin(); it != m_symbols.end(); it++)
+		{
+			delete it->second;
+		}
+		m_symbols.clear();
 	}
 }

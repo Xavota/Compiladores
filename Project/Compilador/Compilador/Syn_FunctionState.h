@@ -10,7 +10,16 @@ namespace Compilador
 		~Syn_FunctionState();
 
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
-	private:
 
+	private:
+		eRETURN_STATE GetID(AnalizadorSintactico* syntactic);
+		eRETURN_STATE OpenParenthesis(AnalizadorSintactico* syntactic);
+		eRETURN_STATE OpenBrackets(AnalizadorSintactico* syntactic);
+		eRETURN_STATE Colon(AnalizadorSintactico* syntactic);
+		eRETURN_STATE GetType(AnalizadorSintactico* syntactic);
+	private:
+		std::string m_name;
+
+		bool m_hasReturn;
 	};
 }

@@ -16,6 +16,8 @@ namespace Compilador
 
 		void UpdateSymboltype(std::string name, std::string cathegory, std::string functionName, std::string newType);
 
+		void Clear();
+
 	public:
 		std::map<std::string, Symbol*> m_symbols;
 	};

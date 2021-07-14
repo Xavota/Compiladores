@@ -16,27 +16,21 @@ Compilador::Manager::~Manager()
 	
 }
 
+void CountSymbol(Compilador::Symbol* sy, int& count)
+{
+	if (sy != nullptr)
+		count++;
+	else
+		return;
+
+	CountSymbol(sy->m_next, count);
+}
+
 void CountSymbols(Compilador::SymbolTable* st, int& count)
 {
 	for (std::map<std::string, Compilador::Symbol*>::iterator it = st->m_symbols.begin(); it != st->m_symbols.end(); it++)
 	{
-		CountSymbols(it->second, count);
-	}
-}
-
-void CountSymbols(Compilador::Symbol* sy, int& count)
-{
-	if (sy != nullptr)
-		count++;
-
-	CountSymbols(sy->m_next, count);
-}
-
-void AddSymbols(Compilador::SymbolTable* st, cli::array<String^>^ compRs, int& offset)
-{
-	for (std::map<std::string, Compilador::Symbol*>::iterator it = st->m_symbols.begin(); it != st->m_symbols.end(); it++)
-	{
-		AddSymbol(it->second, compRs, offset);
+		CountSymbol(it->second, count);
 	}
 }
 
@@ -63,6 +57,14 @@ void AddSymbol(Compilador::Symbol* sy, cli::array<String^>^ compRs, int& offset)
 	AddSymbol(sy->m_next, compRs, offset);
 }
 
+void AddSymbols(Compilador::SymbolTable* st, cli::array<String^>^ compRs, int& offset)
+{
+	for (std::map<std::string, Compilador::Symbol*>::iterator it = st->m_symbols.begin(); it != st->m_symbols.end(); it++)
+	{
+		AddSymbol(it->second, compRs, offset);
+	}
+}
+
 cli::array<String^>^ Compilador::Manager::Compilar(String^ codigoFuente)
 {
 	m_erroManager->Clean();
@@ -76,7 +78,7 @@ cli::array<String^>^ Compilador::Manager::Compilar(String^ codigoFuente)
 
 	cli::array<Error^>^ errors = m_erroManager->GetErrors();
 
-	int stringCount = 4;
+	int stringCount = 5;
 	stringCount += tokens.size();
 	stringCount += m_erroManager->GetErrorCount();
 	CountSymbols(m_syntacticAnalizer->m_symbolTable, stringCount);

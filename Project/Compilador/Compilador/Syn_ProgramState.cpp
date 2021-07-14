@@ -109,7 +109,10 @@ namespace Compilador
 
 			if (tok.GetType() == eTOKEN_TYPE::KEY_WORD && tok.GetLexeme() == "main")
 			{
-				state = new Syn_FunctionsState();
+				syntactic->AddSymbol(tok.GetLine(), "main", "FUNCTION", 0, "", "void");
+				syntactic->SetContext("main");
+
+				state = new Syn_MainState();
 				if (state->Update(syntactic) == eRETURN_STATE::FATAL)
 				{
 					delete state;
