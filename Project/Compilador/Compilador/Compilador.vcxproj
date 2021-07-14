@@ -144,10 +144,12 @@
     <ClInclude Include="Syn_FunctionCall.h" />
     <ClInclude Include="Syn_FunctionsState.h" />
     <ClInclude Include="Syn_FunctionState.h" />
+    <ClInclude Include="Syn_IfState.h" />
     <ClInclude Include="Syn_LogicExpresion.h" />
     <ClInclude Include="Syn_MainState.h" />
     <ClInclude Include="Syn_Parameters.h" />
     <ClInclude Include="Syn_ProgramState.h" />
+    <ClInclude Include="Syn_ReturnState.h" />
     <ClInclude Include="Syn_Statements.h" />
     <ClInclude Include="Syn_VariableLineState.h" />
     <ClInclude Include="Syn_VariablesState.h" />
@@ -184,10 +186,12 @@
     <ClCompile Include="Syn_FunctionCall.cpp" />
     <ClCompile Include="Syn_FunctionsState.cpp" />
     <ClCompile Include="Syn_FunctionState.cpp" />
+    <ClCompile Include="Syn_IfState.cpp" />
     <ClCompile Include="Syn_LogicExpresion.cpp" />
     <ClCompile Include="Syn_MainState.cpp" />
     <ClCompile Include="Syn_Parameters.cpp" />
     <ClCompile Include="Syn_ProgramState.cpp" />
+    <ClCompile Include="Syn_ReturnState.cpp" />
     <ClCompile Include="Syn_Statements.cpp" />
     <ClCompile Include="Syn_VariableLineState.cpp" />
     <ClCompile Include="Syn_VariablesState.cpp" />

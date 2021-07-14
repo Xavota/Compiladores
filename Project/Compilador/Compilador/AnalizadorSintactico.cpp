@@ -42,7 +42,9 @@ namespace Compilador
 	}
 	bool AnalizadorSintactico::AddError(std::string errorString)
 	{
-		return m_errorManager->AddError(gcnew String(errorString.c_str()), eERROR_TYPE::SYNTACTIC);
+		std::string errorMsg = "<SYNTAX> ";
+		errorMsg.append(errorString);
+		return m_errorManager->AddError(gcnew String(errorMsg.c_str()), eERROR_TYPE::SYNTACTIC);
 	}
 
 	bool AnalizadorSintactico::SymbolExist(std::string name, std::string cathegory, std::string functionName)

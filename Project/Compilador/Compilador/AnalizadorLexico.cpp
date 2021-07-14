@@ -65,7 +65,9 @@ char Compilador::AnalizadorLexico::GetCaractersBack(int putback)
 
 bool Compilador::AnalizadorLexico::AddError(string errorString)
 {
-    return m_errorManager->AddError(gcnew String(errorString.c_str()), eERROR_TYPE::LEXIC);
+	std::string errorMsg = "<LEXIC> ";
+	errorMsg.append(errorString);
+    return m_errorManager->AddError(gcnew String(errorMsg.c_str()), eERROR_TYPE::LEXIC);
 }
 
 void Compilador::AnalizadorLexico::Clean()

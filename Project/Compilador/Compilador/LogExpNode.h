@@ -1,11 +1,12 @@
 #pragma once
+#include "Token.h"
 
 namespace Compilador
 {
 	class LogExpNode
 	{
 	public:
-		LogExpNode();
+		LogExpNode(Token tok);
 		~LogExpNode();
 
 		
@@ -13,5 +14,7 @@ namespace Compilador
 	public:
 		LogExpNode* m_left;
 		LogExpNode* m_right;
+
+		Token m_value;
 	};
 }

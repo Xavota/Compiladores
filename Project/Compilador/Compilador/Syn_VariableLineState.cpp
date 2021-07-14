@@ -24,11 +24,11 @@ namespace Compilador
 		{
 			return eRETURN_STATE::FATAL;
 		}
-		if (r == eRETURN_VAR::BAD)
+		else if (r == eRETURN_VAR::BAD)
 		{
 			return eRETURN_STATE::BAD;
 		}
-		if (r == eRETURN_VAR::FINISH)
+		else if (r == eRETURN_VAR::FINISH)
 		{
 			return eRETURN_STATE::GOOD;
 		}

@@ -12,17 +12,19 @@ namespace Compilador
 
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
 
-		eRETURN_STATE OR(AnalizadorSintactico* syntactic);
-		eRETURN_STATE AND(AnalizadorSintactico* syntactic);
-		eRETURN_STATE Equality(AnalizadorSintactico* syntactic);
-		eRETURN_STATE Inequality(AnalizadorSintactico* syntactic);
-		eRETURN_STATE Expresion(AnalizadorSintactico* syntactic);
-		eRETURN_STATE Term(AnalizadorSintactico* syntactic);
-		eRETURN_STATE Exp(AnalizadorSintactico* syntactic);
-		eRETURN_STATE UnaryNot(AnalizadorSintactico* syntactic);
-		eRETURN_STATE Unary(AnalizadorSintactico* syntactic);
-		eRETURN_STATE Dimesion(AnalizadorSintactico* syntactic);
-		eRETURN_STATE K(AnalizadorSintactico* syntactic);
+	private:
+		LogExpNode* OR(AnalizadorSintactico* syntactic);
+		LogExpNode* AND(AnalizadorSintactico* syntactic);
+		LogExpNode* Equality(AnalizadorSintactico* syntactic);
+		LogExpNode* Inequality(AnalizadorSintactico* syntactic);
+		LogExpNode* Expresion(AnalizadorSintactico* syntactic);
+		LogExpNode* Term(AnalizadorSintactico* syntactic);
+		LogExpNode* Exp(AnalizadorSintactico* syntactic);
+		LogExpNode* UnaryNot(AnalizadorSintactico* syntactic);
+		LogExpNode* Unary(AnalizadorSintactico* syntactic);
+		LogExpNode* Dimesion(AnalizadorSintactico* syntactic);
+		LogExpNode* K(AnalizadorSintactico* syntactic);
+
 	private:
 		LogExpNode* m_root;
 
