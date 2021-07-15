@@ -3,9 +3,11 @@
 #include "vcclr.h"
 #include "ErrorManager.h"
 #include "SymbolTable.h"
+#include "LogExpNode.h"
 
 #include "Token.h"
 #include <vector>
+#include <map>
 
 namespace Compilador
 {
@@ -30,6 +32,8 @@ namespace Compilador
 		void SetContext(std::string con);
 		std::string GetContext();
 
+		void AddLogicTree(int line, LogExpNode* root);
+
 	public:
 		msclr::gcroot<ErrorManager^> m_errorManager;
 		SymbolTable* m_symbolTable;
@@ -38,5 +42,7 @@ namespace Compilador
 		int m_currentTokenIndex = 0;
 
 		std::string m_context;
+
+		std::map<int, std::vector<LogExpNode*>> m_logicTrees;
 	};
 }

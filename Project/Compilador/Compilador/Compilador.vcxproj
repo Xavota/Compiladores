@@ -140,7 +140,9 @@
     <ClInclude Include="Symbol.h" />
     <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="Syn_AsignState.h" />
+    <ClInclude Include="Syn_CaseState.h" />
     <ClInclude Include="Syn_DecDimension.h" />
+    <ClInclude Include="Syn_ForState.h" />
     <ClInclude Include="Syn_FunctionBlock.h" />
     <ClInclude Include="Syn_FunctionCall.h" />
     <ClInclude Include="Syn_FunctionCallState.h" />
@@ -152,10 +154,13 @@
     <ClInclude Include="Syn_Parameters.h" />
     <ClInclude Include="Syn_PrintState.h" />
     <ClInclude Include="Syn_ProgramState.h" />
+    <ClInclude Include="Syn_ReadState.h" />
     <ClInclude Include="Syn_ReturnState.h" />
     <ClInclude Include="Syn_Statements.h" />
+    <ClInclude Include="Syn_SwitchState.h" />
     <ClInclude Include="Syn_VariableLineState.h" />
     <ClInclude Include="Syn_VariablesState.h" />
+    <ClInclude Include="Syn_WhileState.h" />
     <ClInclude Include="Token.h" />
   </ItemGroup>
   <ItemGroup>
@@ -185,7 +190,9 @@
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="Syn_AsignState.cpp" />
+    <ClCompile Include="Syn_CaseState.cpp" />
     <ClCompile Include="Syn_DecDimension.cpp" />
+    <ClCompile Include="Syn_ForState.cpp" />
     <ClCompile Include="Syn_FunctionBlock.cpp" />
     <ClCompile Include="Syn_FunctionCall.cpp" />
     <ClCompile Include="Syn_FunctionCallState.cpp" />
@@ -197,10 +204,13 @@
     <ClCompile Include="Syn_Parameters.cpp" />
     <ClCompile Include="Syn_PrintState.cpp" />
     <ClCompile Include="Syn_ProgramState.cpp" />
+    <ClCompile Include="Syn_ReadState.cpp" />
     <ClCompile Include="Syn_ReturnState.cpp" />
     <ClCompile Include="Syn_Statements.cpp" />
+    <ClCompile Include="Syn_SwitchState.cpp" />
     <ClCompile Include="Syn_VariableLineState.cpp" />
     <ClCompile Include="Syn_VariablesState.cpp" />
+    <ClCompile Include="Syn_WhileState.cpp" />
     <ClCompile Include="Token.cpp" />
   </ItemGroup>
   <ItemGroup>

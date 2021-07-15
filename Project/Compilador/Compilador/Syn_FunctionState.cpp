@@ -20,7 +20,7 @@ namespace Compilador
 		{
 			return eRETURN_STATE::FATAL;
 		}
-		if (!m_hasReturn)
+		if (!m_hasReturn && m_type != "void")
 		{
 			std::string errorMsg = "Missing return statement on function ";
 			errorMsg.append(m_name);
@@ -254,6 +254,7 @@ namespace Compilador
 		Token tok = syntactic->GetNextToken();
 		if (IsFunctionType(tok))
 		{
+			m_type = tok.GetLexeme();
 			syntactic->UpdateSymboltype(m_name, "FUNCTION", "", tok.GetLexeme());
 			return GetType(syntactic);
 		}

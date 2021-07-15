@@ -28,6 +28,8 @@ namespace Compilador
 	private:
 		LogExpNode* m_root;
 
+		int m_startLine;
+
 		std::vector<Token> m_newOrder;
 	};
 }

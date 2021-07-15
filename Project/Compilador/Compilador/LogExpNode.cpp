@@ -3,9 +3,10 @@
 
 namespace Compilador
 {
-	LogExpNode::LogExpNode(Token tok)
+	LogExpNode::LogExpNode(Token tok, int dim)
 	{
 		m_value = tok;
+		m_dim = dim;
 	}
 	
 	LogExpNode::~LogExpNode()

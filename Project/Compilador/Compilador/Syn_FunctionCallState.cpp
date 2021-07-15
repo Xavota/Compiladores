@@ -63,7 +63,7 @@ namespace Compilador
 						return eRETURN_STATE::FATAL;
 					}
 
-					while (tok.GetLexeme() == ")" && tok.GetLexeme() == "}" && tok.GetLexeme() == ";")
+					while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" && tok.GetLexeme() != ";")
 					{
 						tok = syntactic->GetNextToken();
 					}

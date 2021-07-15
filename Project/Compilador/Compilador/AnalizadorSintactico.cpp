@@ -67,4 +67,16 @@ namespace Compilador
 	{
 		return m_context;
 	}
+	void AnalizadorSintactico::AddLogicTree(int line, LogExpNode* root)
+	{
+		if (m_logicTrees.find(line) != m_logicTrees.end())
+		{
+			m_logicTrees[line].push_back(root);
+		}
+		else
+		{
+			m_logicTrees.insert(std::make_pair(line, std::vector<LogExpNode*>()));
+			m_logicTrees[line].push_back(root);
+		}
+	}
 }

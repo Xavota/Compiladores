@@ -1,22 +1,23 @@
 #include "pch.h"
-#include "Syn_IfState.h"
-#include "Syn_Statements.h"
+#include "Syn_WhileState.h"
+
 #include "Syn_LogicExpresion.h"
+#include "Syn_Statements.h"
 
 namespace Compilador
 {
-	Syn_IfState::Syn_IfState(bool* hasReturn)
+	Syn_WhileState::Syn_WhileState(bool* hasReturn)
 	{
 		m_hasReturn = hasReturn;
 	}
-	Syn_IfState::~Syn_IfState()
+	Syn_WhileState::~Syn_WhileState()
 	{
 	}
-	eRETURN_STATE Syn_IfState::Update(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_WhileState::Update(AnalizadorSintactico* syntactic)
 	{
 		return OpenParenthesis(syntactic);
 	}
-	eRETURN_STATE Syn_IfState::OpenParenthesis(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_WhileState::OpenParenthesis(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetLexeme() == "(")
@@ -70,7 +71,7 @@ namespace Compilador
 		}
 		else
 		{
-			std::string errorMsg = "Expected '(' after if key word on line ";
+			std::string errorMsg = "Expected '(' after while key word on line ";
 			errorMsg.append(to_string(tok.GetLine()));
 			if (!syntactic->AddError(errorMsg))
 			{
@@ -165,7 +166,7 @@ namespace Compilador
 		}
 		return eRETURN_STATE::BAD;
 	}
-	eRETURN_STATE Syn_IfState::CloseParenthesis(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_WhileState::CloseParenthesis(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetLexeme() == ")")
@@ -222,7 +223,7 @@ namespace Compilador
 		}
 		return eRETURN_STATE::BAD;
 	}
-	eRETURN_STATE Syn_IfState::OpenBrackets(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_WhileState::OpenBrackets(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetLexeme() == "{")
@@ -296,7 +297,7 @@ namespace Compilador
 		}
 		return eRETURN_STATE::BAD;
 	}
-	eRETURN_STATE Syn_IfState::CloseBrackets(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_WhileState::CloseBrackets(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetLexeme() == "}")

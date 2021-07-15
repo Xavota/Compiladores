@@ -6,15 +6,16 @@ namespace Compilador
 	class LogExpNode
 	{
 	public:
-		LogExpNode(Token tok);
+		LogExpNode(Token tok, int dim);
 		~LogExpNode();
 
-		
+		void SetDim(int dim) { m_dim = dim; }
 
 	public:
 		LogExpNode* m_left;
 		LogExpNode* m_right;
 
 		Token m_value;
+		int m_dim = 0;
 	};
 }

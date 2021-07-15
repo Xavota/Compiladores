@@ -129,6 +129,21 @@
     <ClInclude Include="Syn_PrintState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Syn_ForState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Syn_WhileState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Syn_ReadState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Syn_SwitchState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Syn_CaseState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compilador.cpp">
@@ -243,6 +258,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Syn_PrintState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_ForState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_WhileState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_ReadState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_SwitchState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_CaseState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

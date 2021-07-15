@@ -19,6 +19,7 @@ namespace Compilador
 		eRETURN_STATE GetType(AnalizadorSintactico* syntactic);
 	private:
 		std::string m_name;
+		std::string m_type;
 
 		bool m_hasReturn;
 	};
