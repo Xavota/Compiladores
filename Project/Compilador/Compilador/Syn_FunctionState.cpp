@@ -252,14 +252,14 @@ namespace Compilador
 	eRETURN_STATE Syn_FunctionState::Colon(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
-		if (IsVariableType(tok))
+		if (IsFunctionType(tok))
 		{
 			syntactic->UpdateSymboltype(m_name, "FUNCTION", "", tok.GetLexeme());
 			return GetType(syntactic);
 		}
 		else
 		{
-			std::string errorMsg = "Expected variable type at the end of declaration function on line ";
+			std::string errorMsg = "Expected function type at the end of declaration function on line ";
 			errorMsg.append(to_string(tok.GetLine()));
 			errorMsg.append(". Asumed int");
 			if (!syntactic->AddError(errorMsg))

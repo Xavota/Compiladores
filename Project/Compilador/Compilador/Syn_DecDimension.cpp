@@ -19,7 +19,12 @@ namespace Compilador
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetType() == eTOKEN_TYPE::INT_CONST)
 		{
-			*m_dim = atoi(tok.GetLexeme().c_str());
+			eRETURN_STATE r = eRETURN_STATE::GOOD;
+			*m_dim = StrToInt(tok, syntactic, r);
+			if (r == eRETURN_STATE::FATAL)
+			{
+				return eRETURN_STATE::FATAL;
+			}
 			return CloseSquare(syntactic);
 		}
 		else
@@ -71,5 +76,26 @@ namespace Compilador
 			return eRETURN_STATE::BAD;
 		}
 		return eRETURN_STATE::BAD;
+	}
+	int Syn_DecDimension::StrToInt(Token t, AnalizadorSintactico* syntactic, eRETURN_STATE& r)
+	{
+		int res = 0;
+		for (char c : t.GetLexeme())
+		{
+			res *= 10;
+			res += c - '0';
+
+			if (res > 65535)
+			{
+				std::string errorMsg = "Size of variable dimension can't be more than 65535, on line ";
+				errorMsg.append(to_string(t.GetLine()));
+				if (!syntactic->AddError(errorMsg))
+				{
+					r = eRETURN_STATE::FATAL;
+					return 65535;
+				}
+			}
+		}
+		return 0;
 	}
 }

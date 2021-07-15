@@ -37,14 +37,14 @@ namespace Compilador
 			{
 				if (hasFunctions)
 				{
-					if (!syntactic->AddError("Global variables must be after functions"))
+					if (!syntactic->AddError("Global variables must be before functions"))
 					{
 						return eRETURN_STATE::FATAL;
 					}
 				}
 				if (hasMain)
 				{
-					if (!syntactic->AddError("Global variables must be after main"))
+					if (!syntactic->AddError("Global variables must be before main"))
 					{
 						return eRETURN_STATE::FATAL;
 					}
@@ -77,7 +77,7 @@ namespace Compilador
 			{
 				if (hasMain)
 				{
-					if (!syntactic->AddError("Functions must be after main"))
+					if (!syntactic->AddError("Functions must be before main"))
 					{
 						return eRETURN_STATE::FATAL;
 					}

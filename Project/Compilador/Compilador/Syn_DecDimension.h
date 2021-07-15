@@ -11,8 +11,11 @@ namespace Compilador
 
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
 
+	private:
 		eRETURN_STATE GetInt(AnalizadorSintactico* syntactic);
 		eRETURN_STATE CloseSquare(AnalizadorSintactico* syntactic);
+
+		int StrToInt(Token t, AnalizadorSintactico* syntactic, eRETURN_STATE& r);
 	private:
 		int* m_dim;
 	};
