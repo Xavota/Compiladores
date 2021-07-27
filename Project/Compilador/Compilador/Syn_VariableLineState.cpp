@@ -180,7 +180,7 @@ namespace Compilador
 				}
 				else
 				{
-					syntactic->AddSymbol(lines[i], Ids[i], context, dims[i], syntactic->GetContext(), tok.GetLexeme());
+					syntactic->AddSymbol(lines[i], Ids[i], context, dims[i], syntactic->GetContext(), tok.GetLexeme(), 0);
 				}
 			}
 

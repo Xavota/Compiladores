@@ -22,6 +22,7 @@ namespace Compilador
 
 		bool IsVariableType(Token tok);
 		bool IsFunctionType(Token tok);
+		bool IsCaseType(Token tok);
 	
 	private:
 		

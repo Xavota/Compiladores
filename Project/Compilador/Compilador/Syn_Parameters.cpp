@@ -15,6 +15,7 @@ namespace Compilador
 		Ids.clear();
 		dims.clear();
 		lines.clear();
+		m_count = 0;
 		eRETURN_VAR r = MultiVariablesBlock(syntactic);
 
 		if (r == eRETURN_VAR::FATAL)
@@ -217,7 +218,7 @@ namespace Compilador
 				}
 				else
 				{
-					syntactic->AddSymbol(lines[i], Ids[i], "PARAMETER", dims[i], syntactic->GetContext(), tok.GetLexeme());
+					syntactic->AddSymbol(lines[i], Ids[i], "PARAMETER", dims[i], syntactic->GetContext(), tok.GetLexeme(), m_count++);
 				}
 			}
 

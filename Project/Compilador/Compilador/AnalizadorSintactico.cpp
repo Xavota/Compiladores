@@ -51,9 +51,9 @@ namespace Compilador
 	{
 		return m_symbolTable->SymbolExist(name, cathegory, functionName);
 	}
-	void AnalizadorSintactico::AddSymbol(int line, std::string name, std::string cathegory, int dimension, std::string functionName, std::string type)
+	void AnalizadorSintactico::AddSymbol(int line, std::string name, std::string cathegory, int dimension, std::string functionName, std::string type, int extraInfo)
 	{
-		m_symbolTable->AddSymbol(line, name, cathegory, dimension, functionName, type);
+		m_symbolTable->AddSymbol(line, name, cathegory, dimension, functionName, type, extraInfo);
 	}
 	void AnalizadorSintactico::UpdateSymboltype(std::string name, std::string cathegory, std::string functionName, std::string newType)
 	{
@@ -78,5 +78,13 @@ namespace Compilador
 			m_logicTrees.insert(std::make_pair(line, std::vector<LogExpNode*>()));
 			m_logicTrees[line].push_back(root);
 		}
+	}
+	std::string AnalizadorSintactico::GetSymbolType(std::string name, std::string functionName, bool& isFunction)
+	{
+		return m_symbolTable->GetType(name, functionName, isFunction);
+	}
+	std::map<int, std::string> AnalizadorSintactico::GetFuncParameterTypes(std::string functionName)
+	{
+		return m_symbolTable->GetFuncParameterTypes(functionName);
 	}
 }

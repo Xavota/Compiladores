@@ -120,6 +120,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnalizadorLexico.h" />
+    <ClInclude Include="AnalizadorSemantico.h" />
     <ClInclude Include="AnalizadorSintactico.h" />
     <ClInclude Include="CharState.h" />
     <ClInclude Include="Compilador.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Syn_AsignState.h" />
     <ClInclude Include="Syn_CaseState.h" />
     <ClInclude Include="Syn_DecDimension.h" />
+    <ClInclude Include="Syn_DefaultCaseState.h" />
     <ClInclude Include="Syn_ForState.h" />
     <ClInclude Include="Syn_FunctionBlock.h" />
     <ClInclude Include="Syn_FunctionCall.h" />
@@ -165,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalizadorLexico.cpp" />
+    <ClCompile Include="AnalizadorSemantico.cpp" />
     <ClCompile Include="AnalizadorSintactico.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="CharState.cpp" />
@@ -192,6 +195,7 @@
     <ClCompile Include="Syn_AsignState.cpp" />
     <ClCompile Include="Syn_CaseState.cpp" />
     <ClCompile Include="Syn_DecDimension.cpp" />
+    <ClCompile Include="Syn_DefaultCaseState.cpp" />
     <ClCompile Include="Syn_ForState.cpp" />
     <ClCompile Include="Syn_FunctionBlock.cpp" />
     <ClCompile Include="Syn_FunctionCall.cpp" />

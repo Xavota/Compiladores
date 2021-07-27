@@ -12,4 +12,8 @@ namespace Compilador
 	LogExpNode::~LogExpNode()
 	{
 	}
+	void LogExpNode::AddSubTree(LogExpNode* subTree)
+	{
+		m_subTrees.push_back(subTree);
+	}
 }

@@ -19,4 +19,8 @@ namespace Compilador
 	{
 		return tok.GetType() == eTOKEN_TYPE::KEY_WORD && (tok.GetLexeme() == "int" || tok.GetLexeme() == "char" || tok.GetLexeme() == "float" || tok.GetLexeme() == "string" || tok.GetLexeme() == "bool" || tok.GetLexeme() == "void");
 	}
+	bool SyntaxState::IsCaseType(Token tok)
+	{
+		return tok.GetType() == eTOKEN_TYPE::KEY_WORD && (tok.GetLexeme() == "int" || tok.GetLexeme() == "char" || tok.GetLexeme() == "string" || tok.GetLexeme() == "bool");
+	}
 }

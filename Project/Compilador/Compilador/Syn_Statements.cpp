@@ -251,7 +251,7 @@ namespace Compilador
 
 			if (tok.GetLexeme() == "switch")
 			{
-				state = new Syn_SwitchState();
+				state = new Syn_SwitchState(m_hasReturn);
 				if (state->Update(syntactic) == eRETURN_STATE::FATAL)
 				{
 					delete state;

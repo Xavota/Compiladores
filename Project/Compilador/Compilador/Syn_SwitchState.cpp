@@ -5,8 +5,9 @@
 
 namespace Compilador
 {
-	Syn_SwitchState::Syn_SwitchState()
+	Syn_SwitchState::Syn_SwitchState(bool* hasReturn)
 	{
+		m_hasReturn = hasReturn;
 	}
 	Syn_SwitchState::~Syn_SwitchState()
 	{
@@ -15,7 +16,7 @@ namespace Compilador
 	{
 		Token tok = syntactic->GetNextToken();
 
-		SyntaxState* state = new Syn_CaseState();
+		SyntaxState* state = new Syn_CaseState(m_hasReturn);
 		while (tok.GetLexeme() != "}")
 		{
 			tok = syntactic->GetNextToken();

@@ -39,19 +39,20 @@ LexicState* InitState::NextChar(char c, int& putback, AnalizadorLexico* lexic)
 		//delete this;
 		if (isLetter(lexic->GetCaractersBack(1)) || isDigit(lexic->GetCaractersBack(1)) || lexic->GetCaractersBack(1) == ')' || lexic->GetCaractersBack(1) == '}' || lexic->GetCaractersBack(1) == ']')
 		{
-			if (isLetter(lexic->GetCaractersBack(-1)) || lexic->GetCaractersBack(-1) == '(' || lexic->GetCaractersBack(-1) == '[' || lexic->GetCaractersBack(-1) == '{')
-			{
-				lexic->AddToken(lexic->GetLine(), m_buffer, eTOKEN_TYPE::UNARY);
-			}
-			else
-			{
-				lexic->AddToken(lexic->GetLine(), m_buffer, eTOKEN_TYPE::ARITHMETIC_OPERATOR);
-			}
+			lexic->AddToken(lexic->GetLine(), m_buffer, eTOKEN_TYPE::ARITHMETIC_OPERATOR);
 			return new InitState("");
 		}
 		else
 		{
-			return new IntegerState(m_buffer);
+			if (isLetter(lexic->GetCaractersBack(-1)) || lexic->GetCaractersBack(-1) == '(' || lexic->GetCaractersBack(-1) == '[' || lexic->GetCaractersBack(-1) == '{')
+			{
+				lexic->AddToken(lexic->GetLine(), m_buffer, eTOKEN_TYPE::UNARY);
+				return new InitState("");
+			}
+			else
+			{
+				return new IntegerState(m_buffer);
+			}
 		}
 	}
 	else if (isDigit(c))

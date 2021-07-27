@@ -3,16 +3,15 @@
 
 namespace Compilador
 {
-	class Syn_CaseState : public SyntaxState
+	class Syn_DefaultCaseState : public SyntaxState
 	{
 	public:
-		Syn_CaseState(bool* hasReturn);
-		~Syn_CaseState();
+		Syn_DefaultCaseState(bool* hasReturn);
+		~Syn_DefaultCaseState();
 
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
 
 	private:
-		eRETURN_STATE Constant(AnalizadorSintactico* syntactic);
 		eRETURN_STATE Dobledot(AnalizadorSintactico* syntactic);
 		eRETURN_STATE OpenBrackets(AnalizadorSintactico* syntactic);
 		eRETURN_STATE CloseBrackets(AnalizadorSintactico* syntactic);

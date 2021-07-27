@@ -1,18 +1,18 @@
 #include "pch.h"
-#include "Syn_CaseState.h"
+#include "Syn_DefaultCaseState.h"
 
 #include "Syn_Statements.h"
 
 namespace Compilador
 {
-	Syn_CaseState::Syn_CaseState(bool* hasReturn)
+	Syn_DefaultCaseState::Syn_DefaultCaseState(bool* hasReturn)
 	{
 		m_hasReturn = hasReturn;
 	}
-	Syn_CaseState::~Syn_CaseState()
+	Syn_DefaultCaseState::~Syn_DefaultCaseState()
 	{
 	}
-	eRETURN_STATE Syn_CaseState::Update(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_DefaultCaseState::Update(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 
@@ -25,63 +25,7 @@ namespace Compilador
 
 		return eRETURN_STATE::GOOD;
 	}
-	eRETURN_STATE Syn_CaseState::Constant(AnalizadorSintactico* syntactic)
-	{
-		Token tok = syntactic->GetNextToken();
-		if (IsCaseType(tok))
-		{
-			return Dobledot(syntactic);
-		}
-		else
-		{
-			std::string errorMsg = "Expected a valid ID after case key word on line ";
-			errorMsg.append(to_string(tok.GetLine()));
-			if (!syntactic->AddError(errorMsg))
-			{
-				return eRETURN_STATE::FATAL;
-			}
-
-			//Panik mode
-			while (tok.GetLexeme() != ":" && tok.GetLexeme() != "{" && tok.GetLexeme() != "}")
-			{
-				tok = syntactic->GetNextToken();
-			}
-			if (tok.GetLexeme() == ":")
-			{
-				return OpenBrackets(syntactic);
-			}
-			else if (tok.GetLexeme() == "{")
-			{
-				SyntaxState* state = new Syn_Statements(m_hasReturn);
-				eRETURN_STATE r = state->Update(syntactic);
-				delete state;
-				if (r == eRETURN_STATE::GOOD)
-				{
-					return CloseBrackets(syntactic);
-				}
-				else if (r == eRETURN_STATE::BAD)
-				{
-					syntactic->Putback(1);
-					tok = syntactic->GetNextToken();
-					if (tok.GetLexeme() == "}")
-					{
-						return eRETURN_STATE::GOOD;
-					}
-					return eRETURN_STATE::BAD;
-				}
-				else if (r == eRETURN_STATE::FATAL)
-				{
-					return eRETURN_STATE::FATAL;
-				}
-			}
-			else if (tok.GetLexeme() == "}")
-			{
-				return eRETURN_STATE::GOOD;
-			}
-		}
-		return eRETURN_STATE::BAD;
-	}
-	eRETURN_STATE Syn_CaseState::Dobledot(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_DefaultCaseState::Dobledot(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetLexeme() == ":")
@@ -137,7 +81,7 @@ namespace Compilador
 		}
 		return eRETURN_STATE::BAD;
 	}
-	eRETURN_STATE Syn_CaseState::OpenBrackets(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_DefaultCaseState::OpenBrackets(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetLexeme() == "{")
@@ -190,7 +134,7 @@ namespace Compilador
 		}
 		return eRETURN_STATE::BAD;
 	}
-	eRETURN_STATE Syn_CaseState::CloseBrackets(AnalizadorSintactico* syntactic)
+	eRETURN_STATE Syn_DefaultCaseState::CloseBrackets(AnalizadorSintactico* syntactic)
 	{
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetLexeme() == "}")

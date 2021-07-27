@@ -31,5 +31,7 @@ namespace Compilador
 		std::vector<std::string> Ids;
 		std::vector<int> dims;
 		std::vector<int> lines;
+
+		int m_count = 0;
 	};
 }

@@ -96,6 +96,6 @@ namespace Compilador
 				}
 			}
 		}
-		return 0;
+		return res;
 	}
 }

@@ -52,7 +52,7 @@ namespace Compilador
 			}
 			else
 			{
-				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int");
+				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int", 0);
 				syntactic->SetContext(m_name);
 			}
 			return OpenParenthesis(syntactic);
@@ -75,7 +75,7 @@ namespace Compilador
 			if (tok.GetLexeme() == "(")
 			{
 				m_name = "F";
-				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int");
+				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int", 0);
 				syntactic->SetContext(m_name);
 
 				SyntaxState* state = new Syn_Parameters();
@@ -100,7 +100,7 @@ namespace Compilador
 			else if (tok.GetLexeme() == ")")
 			{
 				m_name = "F";
-				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int");
+				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int", 0);
 				syntactic->SetContext(m_name);
 
 				return OpenBrackets(syntactic);
@@ -108,7 +108,7 @@ namespace Compilador
 			if (tok.GetLexeme() == "{")
 			{
 				m_name = "F";
-				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int");
+				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int", 0);
 				syntactic->SetContext(m_name);
 
 				SyntaxState* state = new Syn_FunctionBlock(&m_hasReturn);

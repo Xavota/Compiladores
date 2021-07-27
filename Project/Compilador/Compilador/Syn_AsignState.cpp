@@ -100,6 +100,10 @@ namespace Compilador
 		{
 			std::string errorMsg = "Expected ';' after logic expresion on asignment on line ";
 			errorMsg.append(to_string(tok.GetLine()));
+			if (!syntactic->AddError(errorMsg))
+			{
+				return eRETURN_STATE::FATAL;
+			}
 
 			//Panik mode
 			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
