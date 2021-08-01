@@ -16,6 +16,8 @@ namespace Compilador
 
 		std::string LogicTreeChecker(LogExpNode* node, std::string functionName);
 
+		std::string CreateIntermidiateCode(LogExpNode* node, int& varIndex, std::string functionName);
+
 	private:
 		msclr::gcroot<ErrorManager^> m_errorManager;	
 		AnalizadorSintactico* m_syntactic;
