@@ -10,6 +10,7 @@
 #include "Syn_ReadState.h"
 #include "Syn_SwitchState.h"
 #include "Syn_ReturnState.h"
+#include "Syn_LogicExpresion.h"
 
 namespace Compilador
 {
@@ -63,10 +64,26 @@ namespace Compilador
 				tok = syntactic->GetNextToken();
 				if (tok.GetLexeme() == "(")
 				{
+					StatementNode* stNode = new StatementNode(eSTATEMENT_TYPE::FUNC_CALL);
+
 					syntactic->Putback(2);
-					state = new Syn_FunctionCallState();
+					stNode->m_relatedToken = syntactic->GetNextToken();
+
+					syntactic->StatementTreeAddNode(stNode);
+
+					syntactic->Putback(1);
+					std::vector<LogExpNode*> params;
+					state = new Syn_FunctionCallState(&params);
 					eRETURN_STATE r = state->Update(syntactic);
+
+					for (int p = 0; p < params.size(); p++)
+					{
+						syntactic->StatementTreeAddLogicTree(params[p]);
+					}
+					syntactic->StatementTreeReturnToParent();
+
 					delete state;
+
 					if (r == eRETURN_STATE::FATAL)
 					{
 						return eRETURN_STATE::FATAL;
@@ -78,12 +95,14 @@ namespace Compilador
 						if (tok.GetLexeme() == "}")
 						{
 							syntactic->Putback(1);
+							syntactic->StatementTreeReturnToParent();
 							return eRETURN_STATE::GOOD;
 						}
 						else if (tok.GetLexeme() == ";")
 						{
 							continue;
 						}
+						syntactic->StatementTreeReturnToParent();
 						return eRETURN_STATE::BAD;
 					}
 					else if (r == eRETURN_STATE::GOOD)
@@ -103,7 +122,8 @@ namespace Compilador
 							}
 
 							//Panik Mode
-							while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+							while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+							    && tok.GetType() != eTOKEN_TYPE::END)
 							{
 								tok = syntactic->GetNextToken();
 							}
@@ -113,11 +133,47 @@ namespace Compilador
 							}
 							else if (tok.GetLexeme() == "}")
 							{
+								syntactic->StatementTreeReturnToParent();
 								return eRETURN_STATE::GOOD;
+							}
+							else if (tok.GetType() == eTOKEN_TYPE::END)
+							{
+								syntactic->StatementTreeReturnToParent();
+								return eRETURN_STATE::BAD;
 							}
 						}
 						return eRETURN_STATE::BAD;
 					}
+				}
+				else if (tok.GetLexeme() == "[")
+				{
+					LogExpNode* dim;
+
+					StatementNode* stNode = new StatementNode(eSTATEMENT_TYPE::DIM);
+
+					syntactic->Putback(2);
+					stNode->m_relatedToken = syntactic->GetNextToken();
+
+					syntactic->StatementTreeAddNode(stNode);
+
+					syntactic->Putback(1);
+					state = new Syn_LogicExpresion(&dim);
+					eRETURN_STATE r = state->Update(syntactic);
+					delete state;
+					if (r == eRETURN_STATE::FATAL)
+					{
+						return eRETURN_STATE::FATAL;
+					}
+					else if (r == eRETURN_STATE::BAD)
+					{
+						syntactic->Putback(1);
+						tok = syntactic->GetNextToken();
+						if (tok.GetLexeme() == "}")
+						{
+							syntactic->Putback(1);
+							return eRETURN_STATE::GOOD;
+						}
+					}					
 				}
 				else
 				{

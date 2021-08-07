@@ -92,8 +92,8 @@ namespace Compilador
 				if (!syntactic->AddError(errorMsg))
 				{
 					r = eRETURN_STATE::FATAL;
-					return 65535;
 				}
+				return 65535;
 			}
 		}
 		return res;

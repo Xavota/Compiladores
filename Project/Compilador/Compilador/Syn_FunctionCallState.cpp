@@ -5,8 +5,9 @@
 
 namespace Compilador
 {
-	Syn_FunctionCallState::Syn_FunctionCallState()
+	Syn_FunctionCallState::Syn_FunctionCallState(std::vector<LogExpNode*>* params)
 	{
+		m_params = params;
 	}
 	Syn_FunctionCallState::~Syn_FunctionCallState()
 	{
@@ -23,10 +24,12 @@ namespace Compilador
 		if (tok.GetLexeme() == "(")
 		{
 			SyntaxState* state = nullptr;
-			state = new Syn_LogicExpresion();
 			while (true)
 			{
+				m_params->push_back(nullptr);
+				state = new Syn_LogicExpresion(&(*m_params)[m_params->size() - 1]);
 				eRETURN_STATE r = state->Update(syntactic);
+				delete state;
 				if (r == eRETURN_STATE::FATAL)
 				{
 					return eRETURN_STATE::FATAL;

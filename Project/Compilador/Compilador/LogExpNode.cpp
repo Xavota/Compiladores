@@ -11,6 +11,22 @@ namespace Compilador
 	
 	LogExpNode::~LogExpNode()
 	{
+		if (m_left != nullptr)
+		{
+			delete m_left;
+			m_left = nullptr;
+		}
+		if (m_right != nullptr)
+		{
+			delete m_right;
+			m_right = nullptr;
+		}
+
+		for (int i = 0; i < m_subTrees.size(); i++)
+		{
+			delete m_subTrees[i];
+		}
+		m_subTrees.clear();
 	}
 	void LogExpNode::AddSubTree(LogExpNode* subTree)
 	{

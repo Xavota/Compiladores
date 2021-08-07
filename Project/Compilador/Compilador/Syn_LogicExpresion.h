@@ -7,7 +7,7 @@ namespace Compilador
 	class Syn_LogicExpresion : public SyntaxState
 	{
 	public:
-		Syn_LogicExpresion();
+		Syn_LogicExpresion(LogExpNode** exit);
 		~Syn_LogicExpresion();
 
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
@@ -26,7 +26,7 @@ namespace Compilador
 		LogExpNode* K(eRETURN_STATE& r, AnalizadorSintactico* syntactic);
 
 	private:
-		LogExpNode* m_root;
+		LogExpNode** m_root;
 
 		int m_startLine;
 

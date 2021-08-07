@@ -5,8 +5,9 @@
 
 namespace Compilador
 {
-	Syn_LogicExpresion::Syn_LogicExpresion()
+	Syn_LogicExpresion::Syn_LogicExpresion(LogExpNode** exit)
 	{
+		m_root = exit;
 	}
 	
 	Syn_LogicExpresion::~Syn_LogicExpresion()
@@ -20,11 +21,13 @@ namespace Compilador
 
 		eRETURN_STATE r = eRETURN_STATE::GOOD;
 
-	    m_root = OR(r, syntactic);
+	    *m_root = OR(r, syntactic);
 
-		if (r == eRETURN_STATE::GOOD)
+		if (r != eRETURN_STATE::GOOD)
 		{
-			syntactic->AddLogicTree(m_startLine, m_root);
+			//syntactic->StatementTreeAddLogicTree(m_startLine, *m_root);
+			delete *m_root;
+			*m_root = nullptr;
 		}
 	
 	    return r;
@@ -247,7 +250,7 @@ namespace Compilador
 			{
 				LogExpNode* Parent = new LogExpNode(tok, 0);
 				Parent->m_left = Left;
-				Parent->m_right = UnaryNot(r, syntactic);
+				Parent->m_right = Exp(r, syntactic);
 				Left = Parent;
 			}
 			else
@@ -298,7 +301,8 @@ namespace Compilador
 			Token tok = syntactic->GetNextToken();
 			if (tok.GetLexeme() == "[")
 			{
-				SyntaxState* state = new Syn_LogicExpresion();
+				LogExpNode* result = nullptr;
+				SyntaxState* state = new Syn_LogicExpresion(&result);
 				r = state->Update(syntactic);
 				if (r == eRETURN_STATE::GOOD)
 				{
@@ -306,10 +310,13 @@ namespace Compilador
 					if (tok.GetLexeme() == "]")
 					{
 						Left->SetDim(tok.GetLine());
+						Left->AddSubTree(result);
+						return Left;
 					}
 					else
 					{
-						std::string errorMsg = "Expected '[' after logic expresion on dimension on line ";
+						std::string errorMsg = 
+						                "Expected '[' after logic expresion on dimension on line ";
 						errorMsg.append(to_string(tok.GetLine()));
 						if (!syntactic->AddError(errorMsg))
 						{
@@ -318,7 +325,8 @@ namespace Compilador
 						}
 
 						//Panik
-						while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" && tok.GetLexeme() != ";")
+						while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" 
+						    && tok.GetLexeme() != ";" && tok.GetLexeme() != "]")
 						{
 							tok = syntactic->GetNextToken();
 						}
@@ -332,6 +340,12 @@ namespace Compilador
 							r = eRETURN_STATE::BAD;
 							return nullptr;
 						}
+						else if (tok.GetLexeme() == "]")
+						{
+							Left->SetDim(tok.GetLine());
+							Left->AddSubTree(result);
+							return Left;
+						}
 						return nullptr;
 					}
 				}
@@ -340,12 +354,15 @@ namespace Compilador
 					syntactic->Putback(1);
 					tok = syntactic->GetNextToken();
 
-					if (tok.GetLexeme() == ")")
+					if (tok.GetLexeme() == "]")
 					{
+						Left->AddSubTree(new LogExpNode(Token(tok.GetLine(), "0", 
+						                                              eTOKEN_TYPE::INT_CONST), 0));
 						r = eRETURN_STATE::GOOD;
 						return Left;
 					}
-					else if (tok.GetLexeme() != "}" || tok.GetLexeme() != ";")
+					else if (tok.GetLexeme() == ")" || tok.GetLexeme() == "}" 
+					      || tok.GetLexeme() == ";")
 					{
 						r = eRETURN_STATE::BAD;
 						return nullptr;
@@ -374,7 +391,8 @@ namespace Compilador
 		Token tok = syntactic->GetNextToken();
 
 		if (tok.GetType() == eTOKEN_TYPE::CHAR_CONST || tok.GetType() == eTOKEN_TYPE::FLOAT_CONST
-		 || tok.GetType() == eTOKEN_TYPE::INT_CONST  || tok.GetType() == eTOKEN_TYPE::LOGIC_CONST || tok.GetType() == eTOKEN_TYPE::STRING_CONST)
+		 || tok.GetType() == eTOKEN_TYPE::INT_CONST  || tok.GetType() == eTOKEN_TYPE::LOGIC_CONST 
+		 || tok.GetType() == eTOKEN_TYPE::STRING_CONST)
 		{
 			r = eRETURN_STATE::GOOD;
 			return new LogExpNode(tok, 0);
@@ -385,13 +403,19 @@ namespace Compilador
 			if (temp.GetLexeme() == "(")
 			{
 				syntactic->Putback(2);
-				SyntaxState* state = new Syn_FunctionCallState();
+				std::vector<LogExpNode*> params;
+				SyntaxState* state = new Syn_FunctionCallState(&params);
 				r = state->Update(syntactic);
 				if (r == eRETURN_STATE::GOOD)
 				{
-					return new LogExpNode(tok, 0);
+					LogExpNode* res = new LogExpNode(tok, 0);
+					for (int i = 0; i < params.size(); i++)
+					{
+						res->AddSubTree(params[i]);
+					}
+					return res;
 				}
-				return nullptr;
+				return new LogExpNode(tok, 0);
 			}
 			else
 			{	
@@ -419,8 +443,9 @@ namespace Compilador
 						return nullptr;
 					}
 
-					//Panik
-					while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" && tok.GetLexeme() != ";")
+					//Panik mode
+					while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" 
+					    && tok.GetLexeme() != ";" && tok.GetLexeme() != "]")
 					{
 						tok = syntactic->GetNextToken();
 					}
@@ -429,7 +454,8 @@ namespace Compilador
 						r = eRETURN_STATE::GOOD;
 						return res;
 					}
-					else if (tok.GetLexeme() != "}" || tok.GetLexeme() != ";")
+					else if (tok.GetLexeme() != "}" || tok.GetLexeme() != ";" 
+					      || tok.GetLexeme() != "]")
 					{
 						r = eRETURN_STATE::BAD;
 						return nullptr;
@@ -464,7 +490,8 @@ namespace Compilador
 			}
 
 			//Panik
-			while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" && tok.GetLexeme() != ";")
+			while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}"
+				&& tok.GetLexeme() != ";" && tok.GetLexeme() != "]")
 			{
 				tok = syntactic->GetNextToken();
 			}

@@ -10,13 +10,15 @@ namespace Compilador
 		AnalizadorSemantico(AnalizadorSintactico* syntactic, ErrorManager^ errorMan);
 		~AnalizadorSemantico();
 
-		void Parce(std::vector<Token> m_tokens);
+		void Parce(std::map<std::string, StatementNode*> funcTrees);
 
 		bool AddError(std::string errorString);
 
 		std::string LogicTreeChecker(LogExpNode* node, std::string functionName);
 
-		std::string CreateIntermidiateCode(LogExpNode* node, int& varIndex, std::string functionName);
+		std::string CreateIntermidiateCode(LogExpNode* node, std::string functionName);
+
+		void SearchStatementTrees(StatementNode* node, std::string funcName);
 
 	private:
 		msclr::gcroot<ErrorManager^> m_errorManager;	
@@ -24,6 +26,8 @@ namespace Compilador
 
 		std::vector<Token> m_tokens;
 		int m_currentTokenIndex = 0;
+
+		std::map<std::string, StatementNode*> m_functionStatementsTrees;
 	};
 }
 

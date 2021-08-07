@@ -24,5 +24,11 @@ namespace Compilador
 		
 	private:
 		bool* m_hasReturn;
+
+		LogExpNode* m_subeLogExp = nullptr;
+
+		eEXTRA_INFO m_extraInfo = eEXTRA_INFO::FOR_INC;
+		Token m_incDecTok;
+		int m_incDecVal = 1;
 	};
 }

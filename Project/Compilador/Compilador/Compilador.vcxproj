@@ -137,6 +137,7 @@
     <ClInclude Include="RelationOpState.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SintaxState.h" />
+    <ClInclude Include="StatementNode.h" />
     <ClInclude Include="StringState.h" />
     <ClInclude Include="Symbol.h" />
     <ClInclude Include="SymbolTable.h" />
@@ -189,6 +190,7 @@
     </ClCompile>
     <ClCompile Include="RelationOpState.cpp" />
     <ClCompile Include="SintaxState.cpp" />
+    <ClCompile Include="StatementNode.cpp" />
     <ClCompile Include="StringState.cpp" />
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="SymbolTable.cpp" />

@@ -4,6 +4,7 @@
 #include "ErrorManager.h"
 #include "SymbolTable.h"
 #include "LogExpNode.h"
+#include "StatementNode.h"
 
 #include "Token.h"
 #include <vector>
@@ -32,7 +33,10 @@ namespace Compilador
 		void SetContext(std::string con);
 		std::string GetContext();
 
-		void AddLogicTree(int line, LogExpNode* root);
+		void StatementTreeStartNew(std::string functionName);
+		void StatementTreeAddNode(StatementNode* node);
+		void StatementTreeReturnToParent();
+		void StatementTreeAddLogicTree(LogExpNode* root);
 
 		std::string GetSymbolType(std::string name, std::string functionName, bool& isFunction);
 
@@ -48,5 +52,8 @@ namespace Compilador
 		std::string m_context;
 
 		std::map<int, std::vector<LogExpNode*>> m_logicTrees;
+
+		std::map<std::string, StatementNode*> m_functionStatementsTrees;
+		StatementNode* m_current;
 	};
 }

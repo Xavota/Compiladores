@@ -150,6 +150,9 @@
     <ClInclude Include="AnalizadorSemantico.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StatementNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compilador.cpp">
@@ -285,6 +288,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AnalizadorSemantico.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StatementNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

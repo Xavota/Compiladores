@@ -67,17 +67,43 @@ namespace Compilador
 	{
 		return m_context;
 	}
-	void AnalizadorSintactico::AddLogicTree(int line, LogExpNode* root)
+	void AnalizadorSintactico::StatementTreeStartNew(std::string functionName)
 	{
-		if (m_logicTrees.find(line) != m_logicTrees.end())
+		if (m_functionStatementsTrees.find(functionName) == m_functionStatementsTrees.end())
 		{
-			m_logicTrees[line].push_back(root);
+			m_functionStatementsTrees[functionName] = new StatementNode(eSTATEMENT_TYPE::NONE);
+			m_current = m_functionStatementsTrees[functionName];
+		}
+	}
+	void AnalizadorSintactico::StatementTreeAddNode(StatementNode* node)
+	{
+		if (node != nullptr)
+		{
+			m_current->AddNode(node);
+			m_current = node;
+		}
+	}
+	void AnalizadorSintactico::StatementTreeReturnToParent()
+	{
+		if (m_current->m_parent != nullptr)
+		{
+			m_current = m_current->m_parent;
+		}
+	}
+	void AnalizadorSintactico::StatementTreeAddLogicTree(LogExpNode* root)
+	{
+		if (m_logicTrees.find(root->m_value.GetLine()) != m_logicTrees.end())
+		{
+			m_logicTrees[root->m_value.GetLine()].push_back(root);
 		}
 		else
 		{
-			m_logicTrees.insert(std::make_pair(line, std::vector<LogExpNode*>()));
-			m_logicTrees[line].push_back(root);
+			m_logicTrees.insert(std::make_pair(root->m_value.GetLine(), std::vector<LogExpNode*>()));
+			m_logicTrees[root->m_value.GetLine()].push_back(root);
 		}
+
+
+		m_current->AddLogicExp(root);
 	}
 	std::string AnalizadorSintactico::GetSymbolType(std::string name, std::string functionName, bool& isFunction)
 	{
