@@ -25,7 +25,6 @@ namespace Compilador
 
 		if (r != eRETURN_STATE::GOOD)
 		{
-			//syntactic->StatementTreeAddLogicTree(m_startLine, *m_root);
 			delete *m_root;
 			*m_root = nullptr;
 		}
@@ -310,6 +309,7 @@ namespace Compilador
 					if (tok.GetLexeme() == "]")
 					{
 						Left->SetDim(tok.GetLine());
+						Left->m_extraInfo = eNODE_INFO::DIM;
 						Left->AddSubTree(result);
 						return Left;
 					}
@@ -326,26 +326,25 @@ namespace Compilador
 
 						//Panik
 						while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" 
-						    && tok.GetLexeme() != ";" && tok.GetLexeme() != "]")
+						    && tok.GetLexeme() != ";" && tok.GetLexeme() != "]"
+							&& tok.GetType() != eTOKEN_TYPE::END)
 						{
 							tok = syntactic->GetNextToken();
 						}
-						if (tok.GetLexeme() == ")")
+						if (tok.GetLexeme() == "]")
 						{
-							r = eRETURN_STATE::GOOD;
+							Left->SetDim(tok.GetLine());
+							Left->m_extraInfo = eNODE_INFO::DIM;
+							Left->AddSubTree(result);
 							return Left;
 						}
-						else if (tok.GetLexeme() != "}" || tok.GetLexeme() != ";")
+						else if (tok.GetLexeme() == "}" || tok.GetLexeme() == ";"
+							  || tok.GetLexeme() == ")" || tok.GetType() == eTOKEN_TYPE::END)
 						{
 							r = eRETURN_STATE::BAD;
 							return nullptr;
 						}
-						else if (tok.GetLexeme() == "]")
-						{
-							Left->SetDim(tok.GetLine());
-							Left->AddSubTree(result);
-							return Left;
-						}
+						r = eRETURN_STATE::BAD;
 						return nullptr;
 					}
 				}
@@ -356,23 +355,28 @@ namespace Compilador
 
 					if (tok.GetLexeme() == "]")
 					{
+						Left->m_extraInfo = eNODE_INFO::DIM;
 						Left->AddSubTree(new LogExpNode(Token(tok.GetLine(), "0", 
 						                                              eTOKEN_TYPE::INT_CONST), 0));
 						r = eRETURN_STATE::GOOD;
 						return Left;
 					}
-					else if (tok.GetLexeme() == ")" || tok.GetLexeme() == "}" 
-					      || tok.GetLexeme() == ";")
+					else if (tok.GetLexeme() == "}" || tok.GetLexeme() == ";"
+						|| tok.GetLexeme() == ")" || tok.GetType() == eTOKEN_TYPE::END)
 					{
 						r = eRETURN_STATE::BAD;
 						return nullptr;
 					}
+					r = eRETURN_STATE::BAD;
 					return nullptr;
 				}
 				else if (r == eRETURN_STATE::FATAL)
 				{
+					r = eRETURN_STATE::FATAL;
 					return nullptr;
 				}
+				r = eRETURN_STATE::BAD;
+				return nullptr;
 			}
 			else
 			{
@@ -409,11 +413,21 @@ namespace Compilador
 				if (r == eRETURN_STATE::GOOD)
 				{
 					LogExpNode* res = new LogExpNode(tok, 0);
+					res->m_extraInfo = eNODE_INFO::FUNC;
 					for (int i = 0; i < params.size(); i++)
 					{
 						res->AddSubTree(params[i]);
 					}
 					return res;
+				}
+				else if (r == eRETURN_STATE::BAD)
+				{
+					//"}", ";", END 
+					return new LogExpNode(tok, 0);
+				}
+				else if (r == eRETURN_STATE::FATAL)
+				{
+					return nullptr;
 				}
 				return new LogExpNode(tok, 0);
 			}
@@ -422,6 +436,7 @@ namespace Compilador
 				syntactic->Putback(1);
 				return new LogExpNode(tok, 0);
 			}
+			return new LogExpNode(tok, 0);
 		}
 		else if (tok.GetLexeme() == "(")
 		{
@@ -445,7 +460,8 @@ namespace Compilador
 
 					//Panik mode
 					while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" 
-					    && tok.GetLexeme() != ";" && tok.GetLexeme() != "]")
+					    && tok.GetLexeme() != ";" && tok.GetLexeme() != "]"
+						&& tok.GetType() != eTOKEN_TYPE::END)
 					{
 						tok = syntactic->GetNextToken();
 					}
@@ -454,8 +470,8 @@ namespace Compilador
 						r = eRETURN_STATE::GOOD;
 						return res;
 					}
-					else if (tok.GetLexeme() != "}" || tok.GetLexeme() != ";" 
-					      || tok.GetLexeme() != "]")
+					else if (tok.GetLexeme() == "}" || tok.GetLexeme() == ";" 
+					      || tok.GetLexeme() == "]" || tok.GetType() == eTOKEN_TYPE::END)
 					{
 						r = eRETURN_STATE::BAD;
 						return nullptr;
@@ -472,6 +488,7 @@ namespace Compilador
 					r == eRETURN_STATE::GOOD;
 					return res;
 				}
+				r = eRETURN_STATE::BAD;
 				return nullptr;
 			}
 			else if (r == eRETURN_STATE::FATAL)
@@ -490,8 +507,8 @@ namespace Compilador
 			}
 
 			//Panik
-			while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}"
-				&& tok.GetLexeme() != ";" && tok.GetLexeme() != "]")
+			while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" && tok.GetLexeme() != ";" 
+				&& tok.GetLexeme() != "]" && tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}

@@ -54,6 +54,7 @@ namespace Compilador
 			{
 				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int", 0);
 				syntactic->SetContext(m_name);
+				syntactic->StatementTreeStartNew(m_name);
 			}
 			return OpenParenthesis(syntactic);
 		}
@@ -68,7 +69,8 @@ namespace Compilador
 
 
 			// Panik mode
-			while (tok.GetLexeme() != "(" && tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "{" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != "(" && tok.GetLexeme() != ")" && tok.GetLexeme() != "{" 
+				&& tok.GetLexeme() != "}" && tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -77,6 +79,7 @@ namespace Compilador
 				m_name = "F";
 				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int", 0);
 				syntactic->SetContext(m_name);
+				syntactic->StatementTreeStartNew(m_name);
 
 				SyntaxState* state = new Syn_Parameters();
 				eRETURN_STATE r = state->Update(syntactic);
@@ -102,6 +105,7 @@ namespace Compilador
 				m_name = "F";
 				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int", 0);
 				syntactic->SetContext(m_name);
+				syntactic->StatementTreeStartNew(m_name);
 
 				return OpenBrackets(syntactic);
 			}
@@ -110,6 +114,7 @@ namespace Compilador
 				m_name = "F";
 				syntactic->AddSymbol(tok.GetLine(), m_name, "FUNCTION", 0, "", "int", 0);
 				syntactic->SetContext(m_name);
+				syntactic->StatementTreeStartNew(m_name);
 
 				SyntaxState* state = new Syn_FunctionBlock(&m_hasReturn);
 				eRETURN_STATE r = state->Update(syntactic);
@@ -120,6 +125,10 @@ namespace Compilador
 			else if (tok.GetLexeme() == "}")
 			{
 				return eRETURN_STATE::GOOD;
+			}
+			else if (tok.GetType() == eTOKEN_TYPE::END)
+			{
+				return eRETURN_STATE::BAD;
 			}
 			return eRETURN_STATE::BAD;
 		}
@@ -160,7 +169,8 @@ namespace Compilador
 			}
 
 			// Panik mode
-			while (tok.GetLexeme() != "(" && tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "{" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != "(" && tok.GetLexeme() != ")" && tok.GetLexeme() != "{" 
+				&& tok.GetLexeme() != "}"  && tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -202,6 +212,11 @@ namespace Compilador
 				syntactic->SetContext("");
 				return eRETURN_STATE::GOOD;
 			}
+			else if (tok.GetType() == eTOKEN_TYPE::END)
+			{
+				syntactic->SetContext("");
+				return eRETURN_STATE::BAD;
+			}
 			syntactic->SetContext("");
 			return eRETURN_STATE::BAD;
 		}
@@ -226,7 +241,8 @@ namespace Compilador
 			}
 
 			// Panik mode
-			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "{" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != "{" && tok.GetLexeme() != "}"
+			    && tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -242,6 +258,11 @@ namespace Compilador
 			{
 				syntactic->SetContext("");
 				return eRETURN_STATE::GOOD;
+			}
+			else if (tok.GetType() == eTOKEN_TYPE::END)
+			{
+				syntactic->SetContext("");
+				return eRETURN_STATE::BAD;
 			}
 			syntactic->SetContext("");
 			return eRETURN_STATE::BAD;
@@ -260,7 +281,8 @@ namespace Compilador
 		}
 		else
 		{
-			std::string errorMsg = "Expected function type at the end of declaration function on line ";
+			std::string errorMsg = 
+			                  "Expected function type at the end of declaration function on line ";
 			errorMsg.append(to_string(tok.GetLine()));
 			errorMsg.append(". Asumed int");
 			if (!syntactic->AddError(errorMsg))
@@ -270,7 +292,8 @@ namespace Compilador
 			}
 
 			// Panik mode
-			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "{" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != "{" && tok.GetLexeme() != "}"
+				&& tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -286,6 +309,11 @@ namespace Compilador
 			{
 				syntactic->SetContext("");
 				return eRETURN_STATE::GOOD;
+			}
+			else if (tok.GetType() == eTOKEN_TYPE::END)
+			{
+				syntactic->SetContext("");
+				return eRETURN_STATE::BAD;
 			}
 			syntactic->SetContext("");
 			return eRETURN_STATE::BAD;
@@ -315,7 +343,8 @@ namespace Compilador
 			}
 
 			// Panik mode
-			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "{" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != "{" && tok.GetLexeme() != "}"
+				&& tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -331,6 +360,11 @@ namespace Compilador
 			{
 				syntactic->SetContext("");
 				return eRETURN_STATE::GOOD;
+			}
+			else if (tok.GetType() == eTOKEN_TYPE::END)
+			{
+				syntactic->SetContext("");
+				return eRETURN_STATE::BAD;
 			}
 			syntactic->SetContext("");
 			return eRETURN_STATE::BAD;

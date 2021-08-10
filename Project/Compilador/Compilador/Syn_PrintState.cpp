@@ -20,7 +20,10 @@ namespace Compilador
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetLexeme() == "(")
 		{
+			StatementNode* stNode = new StatementNode(eSTATEMENT_TYPE::PRINT);
+			syntactic->StatementTreeAddNode(stNode);
 			eRETURN_STATE r = Inside(syntactic);
+			syntactic->StatementTreeReturnToParent();
 			if (r == eRETURN_STATE::GOOD)
 			{
 				return Semicolon(syntactic);
@@ -39,33 +42,50 @@ namespace Compilador
 				return eRETURN_STATE::FATAL;
 			}
 
-			while (tok.GetLexeme() != "(" && tok.GetLexeme() != ")" && tok.GetLexeme() != "}" && tok.GetLexeme() != ";")
+			while (tok.GetLexeme() != "(" && tok.GetLexeme() != ")" && tok.GetLexeme() != "}" 
+				&& tok.GetLexeme() != ";" && tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
 			if (tok.GetLexeme() == "(")
 			{
-				return Inside(syntactic);
+				StatementNode* stNode = new StatementNode(eSTATEMENT_TYPE::PRINT);
+				syntactic->StatementTreeAddNode(stNode);
+				eRETURN_STATE r = Inside(syntactic);
+				syntactic->StatementTreeReturnToParent();
+				if (r == eRETURN_STATE::GOOD)
+				{
+					return Semicolon(syntactic);
+				}
+				else
+				{
+					return r;
+				}
 			}
 			else if (tok.GetLexeme() == ")")
 			{
+				return Semicolon(syntactic);
+			}
+			else if (tok.GetLexeme() == ";")
+			{
 				return eRETURN_STATE::GOOD;
 			}
-			else if (tok.GetLexeme() == "}" || tok.GetLexeme() == ";")
+			else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 			{
 				return eRETURN_STATE::BAD;
 			}
 			return eRETURN_STATE::BAD;
 		}
-
 		return eRETURN_STATE::BAD;
 	}
 	eRETURN_STATE Syn_PrintState::Inside(AnalizadorSintactico* syntactic)
 	{
 		Token tok;
-		SyntaxState* state = new Syn_LogicExpresion();
+		SyntaxState* state = nullptr;
 		while (true)
 		{
+			m_prints.push_back(nullptr);
+			state = new Syn_LogicExpresion(&m_prints[m_prints.size() - 1]);
 			eRETURN_STATE r = state->Update(syntactic);
 			if (r == eRETURN_STATE::FATAL)
 			{
@@ -73,16 +93,28 @@ namespace Compilador
 			}
 			else if (r == eRETURN_STATE::BAD)
 			{
+				syntactic->Putback(1);
 				tok = syntactic->GetNextToken();
-				if (tok.GetLexeme() == "}")
+				if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 				{
 					return eRETURN_STATE::BAD;
 				}
-				else if (tok.GetLexeme() == ";" || tok.GetLexeme() == ")")
+				else if (tok.GetLexeme() == ")")
 				{
+					syntactic->StatementTreeAddLogicTree(new LogExpNode(Token(tok.GetLine(), 
+					                                      "\"a\"", eTOKEN_TYPE::STRING_CONST), 0));
+					return eRETURN_STATE::GOOD;
+				}
+				else if (tok.GetLexeme() == ";")
+				{
+					syntactic->Putback(1);
 					return eRETURN_STATE::GOOD;
 				}
 				return eRETURN_STATE::BAD;
+			}
+			else if (r == eRETURN_STATE::GOOD)
+			{
+				syntactic->StatementTreeAddLogicTree(m_prints[m_prints.size() - 1]);
 			}
 
 			tok = syntactic->GetNextToken();
@@ -104,15 +136,22 @@ namespace Compilador
 					return eRETURN_STATE::FATAL;
 				}
 
-				while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" && tok.GetLexeme() != ";")
+				// Panik mode
+				while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" && tok.GetLexeme() != ";"
+					&& tok.GetType() != eTOKEN_TYPE::END)
 				{
 					tok = syntactic->GetNextToken();
 				}
-				if (tok.GetLexeme() == ")" || tok.GetLexeme() == ";")
+				if (tok.GetLexeme() == ")")
 				{
 					return eRETURN_STATE::GOOD;
 				}
-				else if (tok.GetLexeme() == "}")
+				else if (tok.GetLexeme() == ";")
+				{
+					syntactic->Putback(1);
+					return eRETURN_STATE::GOOD;
+				}
+				else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 				{
 					return eRETURN_STATE::BAD;
 				}
@@ -137,7 +176,8 @@ namespace Compilador
 				return eRETURN_STATE::FATAL;
 			}
 
-			while (tok.GetLexeme() != "}" && tok.GetLexeme() != ";")
+			while (tok.GetLexeme() != "}" && tok.GetLexeme() != ";"
+				&& tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -145,8 +185,8 @@ namespace Compilador
 			{
 				return eRETURN_STATE::GOOD;
 			}
-			else if (tok.GetLexeme() == "}")
-			{
+			else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
+			{ 
 				return eRETURN_STATE::BAD;
 			}
 			return eRETURN_STATE::BAD;

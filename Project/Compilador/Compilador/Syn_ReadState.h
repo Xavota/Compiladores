@@ -18,6 +18,7 @@ namespace Compilador
 		eRETURN_STATE Semicolon(AnalizadorSintactico* syntactic);
 
 	private:
+		StatementNode* stNode = nullptr;
 	};
 }
 

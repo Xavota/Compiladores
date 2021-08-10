@@ -66,7 +66,8 @@ namespace Compilador
 				}
 
 				// Panik mode
-				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+					&& tok.GetType() != eTOKEN_TYPE::END)
 				{
 					tok = syntactic->GetNextToken();
 				}
@@ -74,16 +75,16 @@ namespace Compilador
 				{
 					return eRETURN_VAR::FINISH;
 				}
-				else if (tok.GetLexeme() == "}")
-				{
-					return eRETURN_VAR::BAD;
-				}
 				else if (tok.GetLexeme() == ";")
 				{
 					Ids.clear();
 					lines.clear();
 					dims.clear();
 					return eRETURN_VAR::FINISH_BLOCK;
+				}
+				else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
+				{
+					return eRETURN_VAR::BAD;
 				}
 
 				return eRETURN_VAR::BAD;
@@ -114,7 +115,7 @@ namespace Compilador
 					{
 						return eRETURN_VAR::FINISH;
 					}
-					else if (tok.GetLexeme() == "}")
+					else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 					{
 						return eRETURN_VAR::BAD;
 					}
@@ -147,7 +148,8 @@ namespace Compilador
 			}
 			else if (tok.GetLexeme() == ";")
 			{
-				std::string errorMsg = "Expected ':' after list of IDs at parameter declarations on line ";
+				std::string errorMsg = 
+				               "Expected ':' after list of IDs at parameter declarations on line ";
 				errorMsg.append(to_string(tok.GetLine()));
 				if (!syntactic->AddError(errorMsg))
 				{
@@ -162,7 +164,8 @@ namespace Compilador
 			}
 			else
 			{
-				std::string errorMsg = "Expected ':' after list of IDs at parameter declarations on line ";
+				std::string errorMsg = 
+				               "Expected ':' after list of IDs at parameter declarations on line ";
 				errorMsg.append(to_string(tok.GetLine()));
 				if (!syntactic->AddError(errorMsg))
 				{
@@ -171,17 +174,14 @@ namespace Compilador
 
 
 				// Panik mode
-				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+					&& tok.GetType() != eTOKEN_TYPE::END)
 				{
 					tok = syntactic->GetNextToken();
 				}
 				if (tok.GetLexeme() == ")")
 				{
 					return eRETURN_VAR::FINISH;
-				}
-				else if (tok.GetLexeme() == "}")
-				{
-					return eRETURN_VAR::BAD;
 				}
 				else if (tok.GetLexeme() == ";")
 				{
@@ -190,6 +190,10 @@ namespace Compilador
 					dims.clear();
 
 					return eRETURN_VAR::FINISH_BLOCK;
+				}
+				else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
+				{
+					return eRETURN_VAR::BAD;
 				}
 
 				return eRETURN_VAR::BAD;
@@ -235,17 +239,14 @@ namespace Compilador
 
 
 			// Panik mode
-			while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+				&& tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
 			if (tok.GetLexeme() == ")")
 			{
 				return eRETURN_VAR::FINISH;
-			}
-			else if (tok.GetLexeme() == "}")
-			{
-				return eRETURN_VAR::BAD;
 			}
 			else if (tok.GetLexeme() == ";")
 			{
@@ -254,6 +255,10 @@ namespace Compilador
 				dims.clear();
 
 				return eRETURN_VAR::FINISH_BLOCK;
+			}
+			else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
+			{
+				return eRETURN_VAR::BAD;
 			}
 
 			return eRETURN_VAR::BAD;
@@ -279,17 +284,14 @@ namespace Compilador
 				}
 
 				// Panik mode
-				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+				while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+					&& tok.GetType() != eTOKEN_TYPE::END)
 				{
 					tok = syntactic->GetNextToken();
 				}
 				if (tok.GetLexeme() == ")")
 				{
 					return eRETURN_VAR::FINISH;
-				}
-				else if (tok.GetLexeme() == "}")
-				{
-					return eRETURN_VAR::BAD;
 				}
 				else if (tok.GetLexeme() == ";")
 				{
@@ -299,7 +301,10 @@ namespace Compilador
 
 					return eRETURN_VAR::FINISH_BLOCK;
 				}
-
+				else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
+				{
+					return eRETURN_VAR::BAD;
+				}
 				return eRETURN_VAR::BAD;
 			}
 			else

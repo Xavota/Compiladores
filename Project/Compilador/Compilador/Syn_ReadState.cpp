@@ -30,7 +30,8 @@ namespace Compilador
 			}
 
 			//Panik Mode
-			while (tok.GetLexeme() != "(" && tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != "(" && tok.GetLexeme() != ")" && tok.GetLexeme() != ";" 
+				&& tok.GetLexeme() != "}" && tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -46,10 +47,11 @@ namespace Compilador
 			{
 				return eRETURN_STATE::GOOD;
 			}
-			else if (tok.GetLexeme() == "}")
+			else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 			{
 				return eRETURN_STATE::BAD;
 			}
+			return eRETURN_STATE::BAD;
 		}
 		return eRETURN_STATE::BAD;
 	}
@@ -58,10 +60,20 @@ namespace Compilador
 		Token tok = syntactic->GetNextToken();
 		if (tok.GetType() == eTOKEN_TYPE::ID)
 		{
+			stNode = new StatementNode(eSTATEMENT_TYPE::READ);
+			stNode->m_relatedToken = tok;
+			syntactic->StatementTreeAddNode(stNode);
+			syntactic->StatementTreeReturnToParent();
+
 			return CloseParenthesis(syntactic);
 		}
 		else
 		{
+			stNode = new StatementNode(eSTATEMENT_TYPE::READ);
+			stNode->m_relatedToken = Token(tok.GetLine(), "a", eTOKEN_TYPE::ID);
+			syntactic->StatementTreeAddNode(stNode);
+			syntactic->StatementTreeReturnToParent();
+
 			std::string errorMsg = "Expected ID inside read statement on line ";
 			errorMsg.append(to_string(tok.GetLine()));
 			if (!syntactic->AddError(errorMsg))
@@ -70,7 +82,8 @@ namespace Compilador
 			}
 
 			//Panik Mode
-			while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+				&& tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -82,7 +95,7 @@ namespace Compilador
 			{
 				return eRETURN_STATE::GOOD;
 			}
-			else if (tok.GetLexeme() == "}")
+			else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 			{
 				return eRETURN_STATE::BAD;
 			}
@@ -106,7 +119,8 @@ namespace Compilador
 			}
 
 			//Panik Mode
-			while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != ")" && tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+				&& tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -118,7 +132,7 @@ namespace Compilador
 			{
 				return eRETURN_STATE::GOOD;
 			}
-			else if (tok.GetLexeme() == "}")
+			else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 			{
 				return eRETURN_STATE::BAD;
 			}
@@ -142,7 +156,8 @@ namespace Compilador
 			}
 
 			//Panik Mode
-			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+				&& tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
@@ -150,7 +165,7 @@ namespace Compilador
 			{
 				return eRETURN_STATE::GOOD;
 			}
-			else if (tok.GetLexeme() == "}")
+			else if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 			{
 				return eRETURN_STATE::BAD;
 			}

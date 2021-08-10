@@ -20,7 +20,8 @@ namespace Compilador
 		state = new Syn_FunctionState();
 		while (tok.GetLexeme() == "function")
 		{
-			if (state->Update(syntactic) == eRETURN_STATE::FATAL)
+			eRETURN_STATE r = state->Update(syntactic);
+			if (r == eRETURN_STATE::FATAL)
 			{
 				delete state;
 				return eRETURN_STATE::FATAL;

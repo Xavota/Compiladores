@@ -14,6 +14,9 @@ namespace Compilador
 		eRETURN_STATE OpenParenthesis(AnalizadorSintactico* syntactic);
 		eRETURN_STATE Inside(AnalizadorSintactico* syntactic);
 		eRETURN_STATE Semicolon(AnalizadorSintactico* syntactic);
+
+	private:
+		std::vector<LogExpNode*> m_prints;
 		
 	};
 }

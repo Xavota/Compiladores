@@ -54,11 +54,12 @@ namespace Compilador
 				}
 
 				// Panik mode
-				while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+				while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}" 
+					&& tok.GetType() != eTOKEN_TYPE::END)
 				{
 					tok = syntactic->GetNextToken();
 				}
-				if (tok.GetLexeme() == "}")
+				if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 				{
 					return eRETURN_VAR::BAD;
 				}
@@ -91,7 +92,7 @@ namespace Compilador
 					syntactic->Putback(1);
 
 					tok = syntactic->GetNextToken();
-					if (tok.GetLexeme() == "}")
+					if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 					{
 						return eRETURN_VAR::BAD;
 					}
@@ -120,7 +121,8 @@ namespace Compilador
 			}
 			else if (tok.GetLexeme() == ";")
 			{
-				std::string errorMsg = "Expected ':' after list of IDs at parameter declarations on line ";
+				std::string errorMsg = 
+				               "Expected ':' after list of IDs at parameter declarations on line ";
 				errorMsg.append(to_string(tok.GetLine()));
 				if (!syntactic->AddError(errorMsg))
 				{
@@ -131,7 +133,8 @@ namespace Compilador
 			}
 			else
 			{
-				std::string errorMsg = "Expected ':' after list of IDs at parameter declarations on line ";
+				std::string errorMsg = 
+				               "Expected ':' after list of IDs at parameter declarations on line ";
 				errorMsg.append(to_string(tok.GetLine()));
 				if (!syntactic->AddError(errorMsg))
 				{
@@ -140,11 +143,12 @@ namespace Compilador
 
 
 				// Panik mode
-				while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+				while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+					&& tok.GetType() != eTOKEN_TYPE::END)
 				{
 					tok = syntactic->GetNextToken();
 				}
-				if (tok.GetLexeme() == "}")
+				if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 				{
 					return eRETURN_VAR::BAD;
 				}
@@ -197,11 +201,12 @@ namespace Compilador
 
 
 			// Panik mode
-			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+				&& tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
-			if (tok.GetLexeme() == "}")
+			if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 			{
 				return eRETURN_VAR::BAD;
 			}
@@ -232,11 +237,12 @@ namespace Compilador
 			}
 
 			// Panik mode
-			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}")
+			while (tok.GetLexeme() != ";" && tok.GetLexeme() != "}"
+				&& tok.GetType() != eTOKEN_TYPE::END)
 			{
 				tok = syntactic->GetNextToken();
 			}
-			if (tok.GetLexeme() == "}")
+			if (tok.GetLexeme() == "}" || tok.GetType() == eTOKEN_TYPE::END)
 			{
 				return eRETURN_VAR::BAD;
 			}

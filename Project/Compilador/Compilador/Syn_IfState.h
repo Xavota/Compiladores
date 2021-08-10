@@ -18,6 +18,8 @@ namespace Compilador
 
 	private:
 		bool* m_hasReturn = nullptr;
+
+		LogExpNode* m_subLogExp = nullptr;
 	};
 }
 

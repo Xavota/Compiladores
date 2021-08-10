@@ -37,7 +37,8 @@ namespace Compilador
 				else if (r == eRETURN_STATE::BAD)
 				{
 					tok = syntactic->GetNextToken();
-					if (tok.GetLexeme() == ";" || tok.GetLexeme() == "}")
+					if (tok.GetLexeme() == ";" || tok.GetLexeme() == "}" 
+					 || tok.GetType() == eTOKEN_TYPE::END)
 					{
 						return eRETURN_STATE::BAD;
 					}
@@ -45,6 +46,7 @@ namespace Compilador
 					{
 						return eRETURN_STATE::GOOD;
 					}
+					return eRETURN_STATE::BAD;
 				}
 
 				tok = syntactic->GetNextToken();
@@ -66,7 +68,8 @@ namespace Compilador
 						return eRETURN_STATE::FATAL;
 					}
 
-					while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" && tok.GetLexeme() != ";")
+					while (tok.GetLexeme() != ")" && tok.GetLexeme() != "}" 
+						&& tok.GetLexeme() != ";" && tok.GetType() != eTOKEN_TYPE::END)
 					{
 						tok = syntactic->GetNextToken();
 					}
@@ -74,7 +77,8 @@ namespace Compilador
 					{
 						return eRETURN_STATE::GOOD;
 					}
-					else if (tok.GetLexeme() == "}" || tok.GetLexeme() == ";")
+					else if (tok.GetLexeme() == "}" || tok.GetLexeme() == ";" 
+					      || tok.GetType() == eTOKEN_TYPE::END)
 					{
 						return eRETURN_STATE::BAD;
 					}

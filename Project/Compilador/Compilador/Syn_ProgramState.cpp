@@ -111,6 +111,7 @@ namespace Compilador
 			{
 				syntactic->AddSymbol(tok.GetLine(), "main", "FUNCTION", 0, "", "void", 0);
 				syntactic->SetContext("main");
+				syntactic->StatementTreeStartNew("main");
 
 				state = new Syn_MainState();
 				if (state->Update(syntactic) == eRETURN_STATE::FATAL)

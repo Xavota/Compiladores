@@ -45,11 +45,11 @@ namespace Compilador
 		{
 			bool isFunction = false;
 			std::string type = m_syntactic->GetSymbolType(node->m_value.GetLexeme(), 
-														  functionName, isFunction);
+														                 functionName, isFunction);
 			if (isFunction && node->m_extraInfo == eNODE_INFO::FUNC)
 			{
 				std::map<int, std::string> parameters = 
-												   m_syntactic->GetFuncParameterTypes(functionName);
+												  m_syntactic->GetFuncParameterTypes(functionName);
 
 				if (node->m_subTrees.size() > parameters.size())
 				{
@@ -81,7 +81,7 @@ namespace Compilador
 						errorMsg.append(to_string(node->m_value.GetLine()));
 						AddError(errorMsg);
 					}
-					else
+					else if (i < parameters.size())
 					{
 						CreateIntermidiateCode(node->m_subTrees[i], functionName);
 					}
@@ -120,7 +120,7 @@ namespace Compilador
 				errorMsg.append(to_string(node->m_value.GetLine()));
 				AddError(errorMsg);
 
-				return "";
+				return type;
 			}
 		}
 		else if (node->m_value.GetType() == eTOKEN_TYPE::INT_CONST)
@@ -157,6 +157,14 @@ namespace Compilador
 				}
 				else
 				{
+					std::string errorMsg = "There is no operator overlad for types: <";
+					errorMsg.append(left != "" ? left : "error_type");
+					errorMsg.append("> || <");
+					errorMsg.append(right != "" ? right : "error_type");
+					errorMsg.append(">. Types are: <bool> || <bool>. On line ");
+					errorMsg.append(to_string(node->m_value.GetLine()));
+					AddError(errorMsg);
+
 					return "";
 				}
 			}
@@ -170,9 +178,9 @@ namespace Compilador
 				{
 					std::string errorMsg = "There is no operator overlad for types: <";
 					errorMsg.append(left != "" ? left : "error_type");
-					errorMsg.append("> || <");
+					errorMsg.append("> && <");
 					errorMsg.append(right != "" ? right : "error_type");
-					errorMsg.append(">. Types are: <bool> || <bool>. On line ");
+					errorMsg.append(">. Types are: <bool> && <bool>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
 					AddError(errorMsg);
 
@@ -622,168 +630,189 @@ namespace Compilador
 	}
 	void AnalizadorSemantico::SearchStatementTrees(StatementNode* node, std::string funcName)
 	{
-		if (node->m_logExpresions.size() > 0)
+		if (node->m_type == eSTATEMENT_TYPE::ASIGN)
 		{
-			if (node->m_type == eSTATEMENT_TYPE::ASIGN)
+			std::string type = "int";
+			if (node->m_logExpresions.size() > 0)
 			{
-				std::string type = LogicTreeChecker(node->m_logExpresions[0], funcName);
-
-				bool isFunction = false;
-				if (type != m_syntactic->GetSymbolType(node->m_relatedToken.GetLexeme(), funcName, isFunction))
-				{
-					std::string errorMsg = "Invalid type <";
-					errorMsg.append(type != "" ? type : "error_type");
-					errorMsg.append("> on asignment on line ");
-					errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-					AddError(errorMsg);
-				}
-				else
-				{
-					CreateIntermidiateCode(node->m_logExpresions[0], funcName);
-				}
+				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
 			}
-			else if (node->m_type == eSTATEMENT_TYPE::CASE)
-			{
-				std::string type = LogicTreeChecker(node->m_logExpresions[0], funcName);
 
-				bool isFunction = false;
-				if (type != m_syntactic->GetSymbolType(node->m_relatedToken.GetLexeme(), funcName, isFunction))
-				{
-					std::string errorMsg = "Invalid type <";
-					errorMsg.append(type != "" ? type : "error_type");
-					errorMsg.append("> on case on line ");
-					errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-					AddError(errorMsg);
-				}
-				else
-				{
-					CreateIntermidiateCode(node->m_logExpresions[0], funcName);
-				}
+			bool isFunction = false;
+			if (type != m_syntactic->GetSymbolType(node->m_relatedToken.GetLexeme(), funcName, isFunction))
+			{
+				std::string errorMsg = "Invalid type <";
+				errorMsg.append(type != "" ? type : "error_type");
+				errorMsg.append("> on asignment on line ");
+				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+				AddError(errorMsg);
 			}
-			else if (node->m_type == eSTATEMENT_TYPE::FOR)
+			else
 			{
-				std::string type = LogicTreeChecker(node->m_logExpresions[0], funcName);
-
-				bool isFunction = false;
-				if (type != "bool")
-				{
-					std::string errorMsg = "Invalid type <";
-					errorMsg.append(type != "" ? type : "error_type");
-					errorMsg.append("> on for on line ");
-					errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-					AddError(errorMsg);
-				}
-				else
-				{
-					CreateIntermidiateCode(node->m_logExpresions[0], funcName);
-				}
+				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
 			}
-			else if (node->m_type == eSTATEMENT_TYPE::FUNC_CALL)
+		}
+		else if (node->m_type == eSTATEMENT_TYPE::CASE)
+		{
+			std::string type = "int";
+			if (node->m_logExpresions.size() > 0)
 			{
-				std::map<int, std::string> parameters = m_syntactic->GetFuncParameterTypes(node->m_relatedToken.GetLexeme());
+				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+			}
 
-				if (node->m_logExpresions.size() > parameters.size())
-				{
-					std::string errorMsg = "Too many parameters on call function ";
-					errorMsg.append(node->m_relatedToken.GetLexeme());
-					errorMsg.append(" on line ");
-					errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-					AddError(errorMsg);
-				}
-				else if (node->m_logExpresions.size() < parameters.size())
-				{
-					std::string errorMsg = "Not enough parameters on call function ";
-					errorMsg.append(node->m_relatedToken.GetLexeme());
-					errorMsg.append(" on line ");
-					errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-					AddError(errorMsg);
-				}
+			bool isFunction = false;
+			if (type != m_syntactic->GetSymbolType(node->m_relatedToken.GetLexeme(), funcName, isFunction))
+			{
+				std::string errorMsg = "Invalid type <";
+				errorMsg.append(type != "" ? type : "error_type");
+				errorMsg.append("> on case on line ");
+				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+				AddError(errorMsg);
+			}
+			else
+			{
+				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+			}
+		}
+		else if (node->m_type == eSTATEMENT_TYPE::FOR)
+		{
+			std::string type = "bool";
+			if (node->m_logExpresions.size() > 0)
+			{
+				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+			}
 
-				for (int i = 0; i < node->m_logExpresions.size(); i++)
+			bool isFunction = false;
+			if (type != "bool")
+			{
+				std::string errorMsg = "Invalid type <";
+				errorMsg.append(type != "" ? type : "error_type");
+				errorMsg.append("> on for on line ");
+				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+				AddError(errorMsg);
+			}
+			else
+			{
+				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+			}
+		}
+		else if (node->m_type == eSTATEMENT_TYPE::FUNC_CALL)
+		{
+			std::map<int, std::string> parameters = m_syntactic->GetFuncParameterTypes(node->m_relatedToken.GetLexeme());
+
+			if (node->m_logExpresions.size() > parameters.size())
+			{
+				std::string errorMsg = "Too many parameters on call function ";
+				errorMsg.append(node->m_relatedToken.GetLexeme());
+				errorMsg.append(" on line ");
+				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+				AddError(errorMsg);
+			}
+			else if (node->m_logExpresions.size() < parameters.size())
+			{
+				std::string errorMsg = "Not enough parameters on call function ";
+				errorMsg.append(node->m_relatedToken.GetLexeme());
+				errorMsg.append(" on line ");
+				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+				AddError(errorMsg);
+			}
+
+			for (int i = 0; i < node->m_logExpresions.size(); i++)
+			{
+				if (i < parameters.size())
 				{
-					if (i < parameters.size())
+					std::string resultType = LogicTreeChecker(node->m_logExpresions[i], funcName);
+					if (parameters[i] != resultType)
 					{
-						std::string resultType = LogicTreeChecker(node->m_logExpresions[i], funcName);
-						if (parameters[i] != resultType)
-						{
-							std::string errorMsg = "Invalid parameter type <";
-							errorMsg.append(resultType != "" ? resultType : "error_type");
-							errorMsg.append("> on call function ");
-							errorMsg.append(node->m_relatedToken.GetLexeme());
-							errorMsg.append(" on line ");
-							errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-							AddError(errorMsg);
-						}
-						else
-						{
-							CreateIntermidiateCode(node->m_logExpresions[i], funcName);
-						}
+						std::string errorMsg = "Invalid parameter type <";
+						errorMsg.append(resultType != "" ? resultType : "error_type");
+						errorMsg.append("> on call function ");
+						errorMsg.append(node->m_relatedToken.GetLexeme());
+						errorMsg.append(" on line ");
+						errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+						AddError(errorMsg);
+					}
+					else
+					{
+						CreateIntermidiateCode(node->m_logExpresions[i], funcName);
 					}
 				}
 			}
-			else if (node->m_type == eSTATEMENT_TYPE::IF)
+		}
+		else if (node->m_type == eSTATEMENT_TYPE::IF)
+		{
+			std::string type = "bool";
+			if (node->m_logExpresions.size() > 0)
 			{
-				std::string type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+			}
 
-				bool isFunction = false;
-				if (type != "bool")
-				{
-					std::string errorMsg = "Invalid type <";
-					errorMsg.append(type != "" ? type : "error_type");
-					errorMsg.append("> on if on line ");
-					errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-					AddError(errorMsg);
-				}
-				else
+			bool isFunction = false;
+			if (type != "bool")
+			{
+				std::string errorMsg = "Invalid type <";
+				errorMsg.append(type != "" ? type : "error_type");
+				errorMsg.append("> on if on line ");
+				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+				AddError(errorMsg);
+			}
+			else
+			{
+				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+			}
+		}
+		else if (node->m_type == eSTATEMENT_TYPE::PRINT)
+		{
+			for (int i = 0; i < node->m_logExpresions.size(); i++)
+			{
+				if (LogicTreeChecker(node->m_logExpresions[i], funcName) != "")
 				{
 					CreateIntermidiateCode(node->m_logExpresions[0], funcName);
 				}
 			}
-			else if (node->m_type == eSTATEMENT_TYPE::PRINT)
+		}
+		else if (node->m_type == eSTATEMENT_TYPE::RETURN)
+		{
+			std::string type = "int";
+			if (node->m_logExpresions.size() > 0)
 			{
-				for (int i = 0; i < node->m_logExpresions.size(); i++)
-				{
-					if (LogicTreeChecker(node->m_logExpresions[i], funcName) != "")
-					{
-						CreateIntermidiateCode(node->m_logExpresions[0], funcName);
-					}
-				}
+				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
 			}
-			else if (node->m_type == eSTATEMENT_TYPE::RETURN)
-			{
-				std::string type = LogicTreeChecker(node->m_logExpresions[0], funcName);
 
-				bool isFunction = false;
-				if (type != m_syntactic->GetSymbolType(funcName, "", isFunction))
-				{
-					std::string errorMsg = "Invalid return type <";
-					errorMsg.append(type != "" ? type : "error_type");
-					errorMsg.append("> on line ");
-					errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-					AddError(errorMsg);
-				}
-				else
-				{
-					CreateIntermidiateCode(node->m_logExpresions[0], funcName);
-				}
+			bool isFunction = false;
+			if (type != m_syntactic->GetSymbolType(funcName, "", isFunction))
+			{
+				std::string errorMsg = "Invalid return type <";
+				errorMsg.append(type != "" ? type : "error_type");
+				errorMsg.append("> on line ");
+				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+				AddError(errorMsg);
 			}
-			else if (node->m_type == eSTATEMENT_TYPE::WHILE)
+			else
 			{
-				std::string type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+			}
+		}
+		else if (node->m_type == eSTATEMENT_TYPE::WHILE)
+		{
+			std::string type = "bool";
+			if (node->m_logExpresions.size() > 0)
+			{
+				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+			}
 
-				bool isFunction = false;
-				if (type != "bool")
-				{
-					std::string errorMsg = "Invalid type <";
-					errorMsg.append(type != "" ? type : "error_type");
-					errorMsg.append("> on while on line ");
-					errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-					AddError(errorMsg);
-				}
-				else
-				{
-					CreateIntermidiateCode(node->m_logExpresions[0], funcName);
-				}
+			bool isFunction = false;
+			if (type != "bool")
+			{
+				std::string errorMsg = "Invalid type <";
+				errorMsg.append(type != "" ? type : "error_type");
+				errorMsg.append("> on while on line ");
+				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+				AddError(errorMsg);
+			}
+			else
+			{
+				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
 			}
 		}
 	}

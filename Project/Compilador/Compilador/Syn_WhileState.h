@@ -18,7 +18,9 @@ namespace Compilador
 		eRETURN_STATE CloseBrackets(AnalizadorSintactico* syntactic);		
 		
 	private:
-		bool* m_hasReturn;
+		bool* m_hasReturn = nullptr;
+
+		LogExpNode* m_subLogExp = nullptr;
 	};
 }
 

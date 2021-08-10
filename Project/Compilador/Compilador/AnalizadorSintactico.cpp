@@ -72,8 +72,8 @@ namespace Compilador
 		if (m_functionStatementsTrees.find(functionName) == m_functionStatementsTrees.end())
 		{
 			m_functionStatementsTrees[functionName] = new StatementNode(eSTATEMENT_TYPE::NONE);
-			m_current = m_functionStatementsTrees[functionName];
 		}
+		m_current = m_functionStatementsTrees[functionName];
 	}
 	void AnalizadorSintactico::StatementTreeAddNode(StatementNode* node)
 	{
