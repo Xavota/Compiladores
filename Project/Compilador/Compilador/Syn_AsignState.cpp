@@ -192,7 +192,7 @@ namespace Compilador
 						stNode->m_relatedToken = m_tok;
 						syntactic->StatementTreeAddNode(stNode);
 						syntactic->StatementTreeAddLogicTree(m_dimLogExp);
-						stNode->m_extraInfo == eEXTRA_INFO::ASING_DIM;
+						stNode->m_extraInfo = eEXTRA_INFO::ASING_DIM;
 						syntactic->StatementTreeAddLogicTree(new LogExpNode(Token(tok.GetLine(),
 							"0", eTOKEN_TYPE::INT_CONST), 0));
 						syntactic->StatementTreeReturnToParent();
@@ -247,7 +247,7 @@ namespace Compilador
 					if (m_dimLogExp != nullptr)
 					{
 						syntactic->StatementTreeAddLogicTree(m_dimLogExp);
-						stNode->m_extraInfo == eEXTRA_INFO::ASING_DIM;
+						stNode->m_extraInfo = eEXTRA_INFO::ASING_DIM;
 					}
 					syntactic->StatementTreeAddLogicTree(new LogExpNode(Token(tok.GetLine(),
 						                                         "0", eTOKEN_TYPE::INT_CONST), 0));
@@ -298,7 +298,7 @@ namespace Compilador
 						if (m_dimLogExp != nullptr)
 						{
 							syntactic->StatementTreeAddLogicTree(m_dimLogExp);
-							stNode->m_extraInfo == eEXTRA_INFO::ASING_DIM;
+							stNode->m_extraInfo = eEXTRA_INFO::ASING_DIM;
 						}
 						syntactic->StatementTreeAddLogicTree(new LogExpNode(Token(tok.GetLine(),
 							                                     "0", eTOKEN_TYPE::INT_CONST), 0));
@@ -337,7 +337,7 @@ namespace Compilador
 			if (m_dimLogExp != nullptr)
 			{
 				syntactic->StatementTreeAddLogicTree(m_dimLogExp);
-				stNode->m_extraInfo == eEXTRA_INFO::ASING_DIM;
+				stNode->m_extraInfo = eEXTRA_INFO::ASING_DIM;
 			}
 			syntactic->StatementTreeAddLogicTree(m_subLogExp);
 			syntactic->StatementTreeReturnToParent();
@@ -366,7 +366,7 @@ namespace Compilador
 				if (m_dimLogExp != nullptr)
 				{
 					syntactic->StatementTreeAddLogicTree(m_dimLogExp);
-					stNode->m_extraInfo == eEXTRA_INFO::ASING_DIM;
+					stNode->m_extraInfo = eEXTRA_INFO::ASING_DIM;
 				}
 				syntactic->StatementTreeAddLogicTree(m_subLogExp);
 				syntactic->StatementTreeReturnToParent();

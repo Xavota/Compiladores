@@ -1,0 +1,23 @@
+function fa(s : string; len : int) : void
+{
+    fb(s, len);
+	return;
+}
+
+function fb(s : string; len : int) : void
+{
+    var count : int;
+	count = 0;
+	while(count < len)
+	{
+	    print(s);
+	    count = count + 1;
+	}
+	
+	return;
+}
+
+main()
+{
+    print(fa("hola mundo", 2));
+}

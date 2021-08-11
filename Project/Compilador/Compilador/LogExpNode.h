@@ -23,8 +23,8 @@ namespace Compilador
 		void AddSubTree(LogExpNode* subTree);
 
 	public:
-		LogExpNode* m_left;
-		LogExpNode* m_right;
+		LogExpNode* m_left = nullptr;
+		LogExpNode* m_right = nullptr;
 
 		Token m_value;
 		int m_dim = 0;

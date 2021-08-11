@@ -16,6 +16,13 @@ namespace Compilador
 		stNode->m_relatedToken = Token(0, syntactic->GetContext(), eTOKEN_TYPE::ID);
 		syntactic->StatementTreeAddNode(stNode);
 
+		Token temp = syntactic->GetNextToken();
+		if (temp.GetLexeme() == ";")
+		{
+			return eRETURN_STATE::GOOD;
+		}
+		syntactic->Putback(1);
+
 		LogExpNode* subLogTree = nullptr;
 		SyntaxState* state = new Syn_LogicExpresion(&subLogTree);
 		eRETURN_STATE r = state->Update(syntactic);

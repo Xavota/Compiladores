@@ -42,6 +42,7 @@ namespace Compilador
 			{
 				return r;
 			}
+			tok = syntactic->GetNextToken();
 		}
 		return eRETURN_VAR::FINISH;
 	}
@@ -130,7 +131,7 @@ namespace Compilador
 
 					return eRETURN_VAR::BAD;
 				}
-
+				tok = syntactic->GetNextToken();
 			}
 			else
 			{
@@ -225,6 +226,10 @@ namespace Compilador
 					syntactic->AddSymbol(lines[i], Ids[i], "PARAMETER", dims[i], syntactic->GetContext(), tok.GetLexeme(), m_count++);
 				}
 			}
+
+			Ids.clear();
+			lines.clear();
+			dims.clear();
 
 			return VariablesSemicolon(syntactic);
 		}

@@ -121,7 +121,7 @@ namespace Compilador
 			r = m_next->GetFuncParameterTypes(functionName);
 		}
 
-		if (m_type == "PARAMETER" && m_functionName == functionName)
+		if (m_cathegory == "PARAMETER" && m_functionName == functionName)
 		{
 			r.insert(std::make_pair(m_extraInfo, m_type));
 		}

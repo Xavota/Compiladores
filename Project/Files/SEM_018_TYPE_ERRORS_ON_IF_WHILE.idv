@@ -1,0 +1,36 @@
+var w,x,y,z : int;
+
+function fa() : void
+{
+	while(w - ( x / ( y * (z ^ z))))
+	{
+	    fb(w, y);
+		z = 10 - y;
+		x = -x + z;
+	}
+	
+	while(!fb(x, y) && (x < y) && w)
+	{
+	    x = -x + z;
+	}
+	
+	return;
+}
+
+function fb(a,b : int) : string
+{
+    if (a && b)
+	{
+	    return "1";
+	}
+	
+	return "2";
+}
+
+main()
+{
+    w = 1;
+	x = 2;
+	y = 3;
+	z = 4;
+}

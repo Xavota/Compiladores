@@ -3,7 +3,8 @@
 
 namespace Compilador
 {
-	AnalizadorSemantico::AnalizadorSemantico(AnalizadorSintactico* syntactic, ErrorManager^ errorMan)
+	AnalizadorSemantico::AnalizadorSemantico(AnalizadorSintactico* syntactic, 
+	                                         ErrorManager^ errorMan)
 	{
 		m_syntactic = syntactic;
 		m_errorManager = errorMan;
@@ -11,15 +12,21 @@ namespace Compilador
 	AnalizadorSemantico::~AnalizadorSemantico()
 	{
 	}
-	void AnalizadorSemantico::Parce(std::map<std::string, StatementNode*> funcTrees)
+	bool AnalizadorSemantico::Parce(std::map<std::string, StatementNode*> funcTrees)
 	{
+		m_intermidiateCode = "";
 		m_functionStatementsTrees = funcTrees;
 
-		for (std::map<std::string, StatementNode*>::iterator it = m_functionStatementsTrees.begin();
+		for (std::map<std::string, StatementNode*>::iterator it= m_functionStatementsTrees.begin();
 			it != m_functionStatementsTrees.end(); it++)
 		{
-			SearchStatementTrees(it->second, it->first);
+			if (!SearchStatementTrees(it->second, it->first))
+			{
+				return false;
+			}
 		}
+		//TODO: Agregar else, switch, case. Manejar errores fatales en esta sección.
+		return true;
 	}
 
 
@@ -49,7 +56,7 @@ namespace Compilador
 			if (isFunction && node->m_extraInfo == eNODE_INFO::FUNC)
 			{
 				std::map<int, std::string> parameters = 
-												  m_syntactic->GetFuncParameterTypes(functionName);
+												  m_syntactic->GetFuncParameterTypes(node->m_value.GetLexeme());
 
 				if (node->m_subTrees.size() > parameters.size())
 				{
@@ -57,7 +64,10 @@ namespace Compilador
 					errorMsg.append(node->m_value.GetLexeme());
 					errorMsg.append(" on line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 				}
 				else if (node->m_subTrees.size() < parameters.size())
 				{
@@ -65,12 +75,20 @@ namespace Compilador
 					errorMsg.append(node->m_value.GetLexeme());
 					errorMsg.append(" on line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 				}
 				
 				for (int i = 0; i < node->m_subTrees.size(); i++)
 				{
-					std::string resultType = LogicTreeChecker(node->m_subTrees[i], functionName);						
+					std::string resultType = LogicTreeChecker(node->m_subTrees[i], functionName);
+					if (resultType == "fatal")
+					{
+						return "fatal";
+					}
+
 					if (i < parameters.size() && parameters[i] != resultType)
 					{
 						std::string errorMsg = "Invalid parameter type <";
@@ -79,7 +97,10 @@ namespace Compilador
 						errorMsg.append(node->m_value.GetLexeme());
 						errorMsg.append(" on line ");
 						errorMsg.append(to_string(node->m_value.GetLine()));
-						AddError(errorMsg);
+						if (!AddError(errorMsg))
+						{
+							return "fatal";
+						}
 					}
 					else if (i < parameters.size())
 					{
@@ -98,7 +119,10 @@ namespace Compilador
 					errorMsg.append(resultType != "" ? resultType : "error_type");
 					errorMsg.append(">  on dimension on line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -118,7 +142,10 @@ namespace Compilador
 				errorMsg.append(node->m_value.GetLexeme());
 				errorMsg.append(" is not a function. On line ");
 				errorMsg.append(to_string(node->m_value.GetLine()));
-				AddError(errorMsg);
+				if (!AddError(errorMsg))
+				{
+					return "fatal";
+				}
 
 				return type;
 			}
@@ -141,12 +168,20 @@ namespace Compilador
 			if (node->m_left != nullptr)
 			{
 				left = LogicTreeChecker(node->m_left, functionName);
+				if (left == "fatal")
+				{
+					return "fatal";
+				}
 			}
 
 			std::string right = "";
 			if (node->m_right != nullptr)
 			{
 				right = LogicTreeChecker(node->m_right, functionName);
+				if (right == "fatal")
+				{
+					return "fatal";
+				}
 			}
 
 			if (node->m_value.GetLexeme() == "||")
@@ -163,7 +198,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <bool> || <bool>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -182,7 +220,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <bool> && <bool>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -201,7 +242,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -220,7 +264,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -239,7 +286,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <int|float> < <int|float>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -258,7 +308,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <int|float> <= <int|float>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -277,7 +330,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <int|float> > <int|float>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -296,7 +352,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <int|float> >= <int|float>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -307,7 +366,8 @@ namespace Compilador
 				{
 					return "int";
 				}
-				else if ((left == "int" || left == "float") && (right == "int" || right == "float"))
+				else if ((left == "int" || left == "float") 
+				     && (right == "int" || right == "float"))
 				{
 					return "float";
 				}
@@ -323,7 +383,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -335,7 +398,8 @@ namespace Compilador
 				{
 					return "int";
 				}
-				else if ((left == "int" || left == "float") && (right == "int" || right == "float"))
+				else if ((left == "int" || left == "float") 
+				     && (right == "int" || right == "float"))
 				{
 					return "float";
 				}
@@ -347,7 +411,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <int|float> - <int|float>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -358,7 +425,8 @@ namespace Compilador
 				{
 					return "int";
 				}
-				else if ((left == "int" || left == "float") && (right == "int" || right == "float"))
+				else if ((left == "int" || left == "float") 
+				     && (right == "int" || right == "float"))
 				{
 					return "float";
 				}
@@ -370,7 +438,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <int|float> * <int|float>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -381,7 +452,8 @@ namespace Compilador
 				{
 					return "int";
 				}
-				else if ((left == "int" || left == "float") && (right == "int" || right == "float"))
+				else if ((left == "int" || left == "float") 
+				     && (right == "int" || right == "float"))
 				{
 					return "float";
 				}
@@ -393,7 +465,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <int|float> / <int|float>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -412,7 +487,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <int> % <int>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -423,7 +501,8 @@ namespace Compilador
 				{
 					return "int";
 				}
-				else if ((left == "int" || left == "float") && (right == "int" || right == "float"))
+				else if ((left == "int" || left == "float") 
+				     && (right == "int" || right == "float"))
 				{
 					return "float";
 				}
@@ -435,7 +514,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: <int|float> ^ <int|float>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -452,7 +534,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: !<bool>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -470,7 +555,10 @@ namespace Compilador
 					errorMsg.append(right != "" ? right : "error_type");
 					errorMsg.append(">. Types are: -<int|float>. On line ");
 					errorMsg.append(to_string(node->m_value.GetLine()));
-					AddError(errorMsg);
+					if (!AddError(errorMsg))
+					{
+						return "fatal";
+					}
 
 					return "";
 				}
@@ -478,7 +566,8 @@ namespace Compilador
 		}
 		return "";
 	}
-	std::string AnalizadorSemantico::CreateIntermidiateCode(LogExpNode* node, std::string functionName)
+	std::string AnalizadorSemantico::CreateIntermidiateCode(LogExpNode* node, 
+	                                                        std::string functionName)
 	{
 		std::string r;
 		if (node->m_right != nullptr)
@@ -487,19 +576,13 @@ namespace Compilador
 		}
 		else
 		{
-			if (node->m_value.GetType() == eTOKEN_TYPE::CHAR_CONST)
+			if (node->m_value.GetType() == eTOKEN_TYPE::CHAR_CONST
+			 || node->m_value.GetType() == eTOKEN_TYPE::STRING_CONST
+			 || node->m_value.GetType() == eTOKEN_TYPE::FLOAT_CONST
+		     || node->m_value.GetType() == eTOKEN_TYPE::INT_CONST 
+			 || node->m_value.GetType() == eTOKEN_TYPE::LOGIC_CONST)
 			{
-				return "LIT '" + node->m_value.GetLexeme() + "', 0\n";
-			}
-			else if (node->m_value.GetType() == eTOKEN_TYPE::STRING_CONST)
-			{
-				return "LIT \"" + node->m_value.GetLexeme() + "\", 0\n";
-			}
-			else if (node->m_value.GetType() == eTOKEN_TYPE::FLOAT_CONST 
-			      || node->m_value.GetType() == eTOKEN_TYPE::INT_CONST 
-			      || node->m_value.GetType() == eTOKEN_TYPE::LOGIC_CONST)
-			{
-				return "LIT " + node->m_value.GetLexeme() + " , 0\n";
+				return "LIT " + node->m_value.GetLexeme() + ", 0\n";
 			}
 			else if (node->m_value.GetType() == eTOKEN_TYPE::ID)
 			{
@@ -509,13 +592,13 @@ namespace Compilador
 				if (isFunction && node->m_extraInfo == eNODE_INFO::FUNC)
 				{
 					std::map<int, std::string> parameters = 
-												  m_syntactic->GetFuncParameterTypes(functionName);
+												  m_syntactic->GetFuncParameterTypes(node->m_value.GetLexeme());
 
 					for (int i = node->m_subTrees.size() - 1; i >= 0; i--)
 					{
 						if (i < parameters.size())
 						{
-							result = CreateIntermidiateCode(node->m_subTrees[i], functionName);
+							result += CreateIntermidiateCode(node->m_subTrees[i], functionName);
 							result += "STO 0, @VAR" + to_string(i) + "\n";
 						}
 					}
@@ -591,7 +674,8 @@ namespace Compilador
 			r += CreateIntermidiateCode(node->m_left, functionName);
 			return r + "OPR 0, 2\n";
 		}
-		else if (node->m_value.GetLexeme() == "-" && node->m_value.GetType() == eTOKEN_TYPE::ARITHMETIC_OPERATOR)
+		else if (node->m_value.GetLexeme() == "-" 
+		      && node->m_value.GetType() == eTOKEN_TYPE::ARITHMETIC_OPERATOR)
 		{
 			r += CreateIntermidiateCode(node->m_left, functionName);
 			return r + "OPR 0, 3\n";
@@ -628,28 +712,63 @@ namespace Compilador
 
 		return "LIT 0, 0\n";
 	}
-	void AnalizadorSemantico::SearchStatementTrees(StatementNode* node, std::string funcName)
+	bool AnalizadorSemantico::SearchStatementTrees(StatementNode* node, std::string funcName)
 	{
 		if (node->m_type == eSTATEMENT_TYPE::ASIGN)
 		{
-			std::string type = "int";
-			if (node->m_logExpresions.size() > 0)
+			if (node->m_extraInfo == eEXTRA_INFO::ASING_DIM && node->m_logExpresions.size() > 0)
 			{
-				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+				std::string dimType = LogicTreeChecker(node->m_logExpresions[0], funcName);
+				if (dimType == "fatal")
+				{
+					return false;
+				}
+
+				if (dimType != "int")
+				{
+					std::string errorMsg = "Invalid type <";
+					errorMsg.append(dimType != "" ? dimType : "error_type");
+					errorMsg.append("> on dimension on line ");
+					errorMsg.append(to_string(node->m_relatedToken.GetLine()));
+					if (!AddError(errorMsg))
+					{
+						return false;
+					}
+				}
+				if (dimType != "")
+				{
+					m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+					m_intermidiateCode += "\n";
+				}
+			}
+
+			std::string type = "int";
+			if (node->m_logExpresions.size() > (node->m_extraInfo == eEXTRA_INFO::ASING_DIM ? 1 : 0))
+			{
+				type = LogicTreeChecker(node->m_logExpresions[(node->m_extraInfo == eEXTRA_INFO::ASING_DIM ? 1 : 0)], funcName);
+				if (type == "fatal")
+				{
+					return false;
+				}
 			}
 
 			bool isFunction = false;
-			if (type != m_syntactic->GetSymbolType(node->m_relatedToken.GetLexeme(), funcName, isFunction))
+			if (type != 
+			    m_syntactic->GetSymbolType(node->m_relatedToken.GetLexeme(), funcName, isFunction))
 			{
 				std::string errorMsg = "Invalid type <";
 				errorMsg.append(type != "" ? type : "error_type");
 				errorMsg.append("> on asignment on line ");
 				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-				AddError(errorMsg);
+				if (!AddError(errorMsg))
+				{
+					return false;
+				}
 			}
-			else
+			if (type != "")
 			{
-				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[(node->m_extraInfo == eEXTRA_INFO::ASING_DIM ? 1 : 0)], funcName);
+				m_intermidiateCode += "\n";
 			}
 		}
 		else if (node->m_type == eSTATEMENT_TYPE::CASE)
@@ -658,20 +777,37 @@ namespace Compilador
 			if (node->m_logExpresions.size() > 0)
 			{
 				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+				if (type == "fatal")
+				{
+					return false;
+				}
 			}
 
 			bool isFunction = false;
-			if (type != m_syntactic->GetSymbolType(node->m_relatedToken.GetLexeme(), funcName, isFunction))
+			if (type != 
+			    m_syntactic->GetSymbolType(node->m_relatedToken.GetLexeme(), funcName, isFunction))
 			{
 				std::string errorMsg = "Invalid type <";
 				errorMsg.append(type != "" ? type : "error_type");
 				errorMsg.append("> on case on line ");
 				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-				AddError(errorMsg);
+				if (!AddError(errorMsg))
+				{
+					return false;
+				}
 			}
-			else
+			if (type != "")
 			{
-				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				m_intermidiateCode += "\n";
+			}
+
+			for (int i = 0; i < node->m_subStatements.size(); i++)
+			{
+				if (!SearchStatementTrees(node->m_subStatements[i], funcName))
+				{
+					return false;
+				}
 			}
 		}
 		else if (node->m_type == eSTATEMENT_TYPE::FOR)
@@ -680,6 +816,10 @@ namespace Compilador
 			if (node->m_logExpresions.size() > 0)
 			{
 				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+				if (type == "fatal")
+				{
+					return false;
+				}
 			}
 
 			bool isFunction = false;
@@ -689,16 +829,29 @@ namespace Compilador
 				errorMsg.append(type != "" ? type : "error_type");
 				errorMsg.append("> on for on line ");
 				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-				AddError(errorMsg);
+				if (!AddError(errorMsg))
+				{
+					return false;
+				}
 			}
-			else
+			if (type != "")
 			{
-				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				m_intermidiateCode += "\n";
+			}
+
+			for (int i = 0; i < node->m_subStatements.size(); i++)
+			{
+				if (!SearchStatementTrees(node->m_subStatements[i], funcName))
+				{
+					return false;
+				}
 			}
 		}
 		else if (node->m_type == eSTATEMENT_TYPE::FUNC_CALL)
 		{
-			std::map<int, std::string> parameters = m_syntactic->GetFuncParameterTypes(node->m_relatedToken.GetLexeme());
+			std::map<int, std::string> parameters = 
+			                  m_syntactic->GetFuncParameterTypes(node->m_relatedToken.GetLexeme());
 
 			if (node->m_logExpresions.size() > parameters.size())
 			{
@@ -706,7 +859,10 @@ namespace Compilador
 				errorMsg.append(node->m_relatedToken.GetLexeme());
 				errorMsg.append(" on line ");
 				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-				AddError(errorMsg);
+				if (!AddError(errorMsg))
+				{
+					return false;
+				}
 			}
 			else if (node->m_logExpresions.size() < parameters.size())
 			{
@@ -714,7 +870,10 @@ namespace Compilador
 				errorMsg.append(node->m_relatedToken.GetLexeme());
 				errorMsg.append(" on line ");
 				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-				AddError(errorMsg);
+				if (!AddError(errorMsg))
+				{
+					return false;
+				}
 			}
 
 			for (int i = 0; i < node->m_logExpresions.size(); i++)
@@ -722,6 +881,11 @@ namespace Compilador
 				if (i < parameters.size())
 				{
 					std::string resultType = LogicTreeChecker(node->m_logExpresions[i], funcName);
+					if (resultType == "fatal")
+					{
+						return false;
+					}
+
 					if (parameters[i] != resultType)
 					{
 						std::string errorMsg = "Invalid parameter type <";
@@ -730,11 +894,15 @@ namespace Compilador
 						errorMsg.append(node->m_relatedToken.GetLexeme());
 						errorMsg.append(" on line ");
 						errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-						AddError(errorMsg);
+						if (!AddError(errorMsg))
+						{
+							return false;
+						}
 					}
-					else
+					if (resultType != "")
 					{
-						CreateIntermidiateCode(node->m_logExpresions[i], funcName);
+						m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[i], funcName);
+						m_intermidiateCode += "\n";
 					}
 				}
 			}
@@ -745,6 +913,10 @@ namespace Compilador
 			if (node->m_logExpresions.size() > 0)
 			{
 				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+				if (type == "fatal")
+				{
+					return false;
+				}
 			}
 
 			bool isFunction = false;
@@ -754,29 +926,52 @@ namespace Compilador
 				errorMsg.append(type != "" ? type : "error_type");
 				errorMsg.append("> on if on line ");
 				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-				AddError(errorMsg);
+				if (!AddError(errorMsg))
+				{
+					return false;
+				}
 			}
-			else
+			if (type != "")
 			{
-				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				m_intermidiateCode += "\n";
+			}
+
+			for (int i = 0; i < node->m_subStatements.size(); i++)
+			{
+				if (!SearchStatementTrees(node->m_subStatements[i], funcName))
+				{
+					return false;
+				}
 			}
 		}
 		else if (node->m_type == eSTATEMENT_TYPE::PRINT)
 		{
 			for (int i = 0; i < node->m_logExpresions.size(); i++)
 			{
-				if (LogicTreeChecker(node->m_logExpresions[i], funcName) != "")
+				std::string type = LogicTreeChecker(node->m_logExpresions[i], funcName);
+				if (type == "fatal")
 				{
-					CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+					return false;
+				}
+
+				if (type != "")
+				{
+					m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+					m_intermidiateCode += "\n";
 				}
 			}
 		}
 		else if (node->m_type == eSTATEMENT_TYPE::RETURN)
 		{
-			std::string type = "int";
+			std::string type = "void";
 			if (node->m_logExpresions.size() > 0)
 			{
 				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+				if (type == "fatal")
+				{
+					return false;
+				}
 			}
 
 			bool isFunction = false;
@@ -786,11 +981,18 @@ namespace Compilador
 				errorMsg.append(type != "" ? type : "error_type");
 				errorMsg.append("> on line ");
 				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-				AddError(errorMsg);
+				if (!AddError(errorMsg))
+				{
+					return false;
+				}
 			}
-			else
+			if (type != "")
 			{
-				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				if (node->m_logExpresions.size() > 0)
+				{
+					m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+					m_intermidiateCode += "\n";
+				}
 			}
 		}
 		else if (node->m_type == eSTATEMENT_TYPE::WHILE)
@@ -799,6 +1001,10 @@ namespace Compilador
 			if (node->m_logExpresions.size() > 0)
 			{
 				type = LogicTreeChecker(node->m_logExpresions[0], funcName);
+				if (type == "fatal")
+				{
+					return false;
+				}
 			}
 
 			bool isFunction = false;
@@ -808,12 +1014,39 @@ namespace Compilador
 				errorMsg.append(type != "" ? type : "error_type");
 				errorMsg.append("> on while on line ");
 				errorMsg.append(to_string(node->m_relatedToken.GetLine()));
-				AddError(errorMsg);
+				if (!AddError(errorMsg))
+				{
+					return false;
+				}
 			}
-			else
+			if (type != "")
 			{
-				CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+				m_intermidiateCode += "\n";
+			}
+
+			for (int i = 0; i < node->m_subStatements.size(); i++)
+			{
+				if (!SearchStatementTrees(node->m_subStatements[i], funcName))
+				{
+					return false;
+				}
 			}
 		}
+		else if (node->m_type == eSTATEMENT_TYPE::NONE)
+		{
+			for (int i = 0; i < node->m_subStatements.size(); i++)
+			{
+				if (!SearchStatementTrees(node->m_subStatements[i], funcName))
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	std::string AnalizadorSemantico::GetIntermidiateCode()
+	{
+		return m_intermidiateCode;
 	}
 }

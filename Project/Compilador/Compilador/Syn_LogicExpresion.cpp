@@ -268,7 +268,8 @@ namespace Compilador
 		if (tok.GetLexeme() == "!")
 		{
 			LogExpNode* Parent = new LogExpNode(tok, 0);
-			Parent->m_right = OR(r, syntactic);
+			Parent->m_right = Dimesion(r, syntactic);
+			return Parent;
 		}
 		else
 		{
@@ -283,7 +284,8 @@ namespace Compilador
 		if (tok.GetType() == eTOKEN_TYPE::UNARY)
 		{
 			LogExpNode* Parent = new LogExpNode(tok, 0);
-			Parent->m_right = OR(r, syntactic);
+			Parent->m_right = Dimesion(r, syntactic);
+			return Parent;
 		}
 		else
 		{

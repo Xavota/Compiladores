@@ -9,6 +9,7 @@ Compilador::Manager::Manager()
 	m_erroManager = gcnew ErrorManager();
 	m_lexicAnalizer = new AnalizadorLexico(m_erroManager);
 	m_syntacticAnalizer = new AnalizadorSintactico(m_erroManager);
+	m_semanticAnalizer = new AnalizadorSemantico(m_syntacticAnalizer, m_erroManager);
 }
 
 Compilador::Manager::~Manager()
@@ -76,9 +77,12 @@ cli::array<String^>^ Compilador::Manager::Compilar(String^ codigoFuente)
 	if (completed)
 		completed = m_syntacticAnalizer->Parce(tokens);
 
+	if (completed)
+		completed = m_semanticAnalizer->Parce(m_syntacticAnalizer->m_functionStatementsTrees);
+
 	cli::array<Error^>^ errors = m_erroManager->GetErrors();
 
-	int stringCount = 5;
+	int stringCount = 7;
 	stringCount += tokens.size();
 	stringCount += m_erroManager->GetErrorCount();
 	CountSymbols(m_syntacticAnalizer->m_symbolTable, stringCount);
@@ -162,6 +166,9 @@ cli::array<String^>^ Compilador::Manager::Compilar(String^ codigoFuente)
 		detallesDeCompilacion[offset++] = gcnew String("==================== Build complete ====================");/**/
 	else
 		detallesDeCompilacion[offset++] = gcnew String("Too many errors. Compilation stoped.");/**/		
+
+	detallesDeCompilacion[offset++] = gcnew String("@InterCode");
+	detallesDeCompilacion[offset++] = gcnew String(m_semanticAnalizer->GetIntermidiateCode().c_str());
 	/*cli::array<String^>^ detallesDeCompilacion = gcnew cli::array<String^>(1);
 	detallesDeCompilacion[0] = gcnew String("==================== Build complete ====================");/**/
 

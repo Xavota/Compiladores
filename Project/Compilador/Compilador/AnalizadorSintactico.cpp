@@ -19,6 +19,7 @@ namespace Compilador
 		m_symbolTable->Clear();
 		m_currentTokenIndex = 0;
 		m_tokens = tokens;
+		m_functionStatementsTrees.clear();
 
 		SyntaxState* state = new Syn_ProgramState();
 		state->Update(this);

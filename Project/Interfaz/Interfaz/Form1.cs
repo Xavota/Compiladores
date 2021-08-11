@@ -347,6 +347,7 @@ namespace Interfaz
             int readingSymbols = 2;
             int readingErrors = 3;
             int readingComments = 4;
+            int interCode = 54;
 
             for (int i = 0; i < result.Length; i++)
             {
@@ -368,6 +369,13 @@ namespace Interfaz
                 else if (result[i] == "@Comments")
                 {
                     flag = readingComments;
+                    if (outputStrings.Count > 0)
+                        outputStrings.Add("");
+                    continue;
+                }
+                else if (result[i] == "@InterCode")
+                {
+                    flag = interCode;
                     if (outputStrings.Count > 0)
                         outputStrings.Add("");
                     continue;
@@ -466,6 +474,22 @@ namespace Interfaz
                 else if (flag == readingComments)
                 {
                     outputStrings.Add(result[i]);
+                }
+                else if (flag == interCode)
+                {
+                    string line = "";
+                    for (int j = 0; j < result[i].Length; j++)
+                    {
+                        if (result[i][j] == '\n')
+                        {
+                            outputStrings.Add(line);
+                            line = "";
+                        }
+                        else
+                        {
+                            line += result[i][j];
+                        }
+                    }
                 }
             }
 
