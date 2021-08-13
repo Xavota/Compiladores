@@ -142,6 +142,7 @@
     <ClInclude Include="Symbol.h" />
     <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="Syn_AsignState.h" />
+    <ClInclude Include="Syn_CaseDefaultState.h" />
     <ClInclude Include="Syn_CaseState.h" />
     <ClInclude Include="Syn_DecDimension.h" />
     <ClInclude Include="Syn_DefaultCaseState.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="Symbol.cpp" />
     <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="Syn_AsignState.cpp" />
+    <ClCompile Include="Syn_CaseDefaultState.cpp" />
     <ClCompile Include="Syn_CaseState.cpp" />
     <ClCompile Include="Syn_DecDimension.cpp" />
     <ClCompile Include="Syn_DefaultCaseState.cpp" />

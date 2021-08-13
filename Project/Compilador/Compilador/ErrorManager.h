@@ -11,6 +11,7 @@ namespace Compilador
 		NONE = -1,
 		LEXIC,
 		SYNTACTIC,
+		SEMANTIC,
 		COUNT
 	};
 

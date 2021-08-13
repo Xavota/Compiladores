@@ -25,7 +25,7 @@ namespace Compilador
 	public:
 		LogExpNode* m_left = nullptr;
 		LogExpNode* m_right = nullptr;
-
+			
 		Token m_value;
 		int m_dim = 0;
 

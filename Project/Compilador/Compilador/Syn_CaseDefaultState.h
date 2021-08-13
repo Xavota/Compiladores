@@ -3,16 +3,15 @@
 
 namespace Compilador
 {
-	class Syn_CaseState : public SyntaxState
+	class Syn_CaseDefaultState : public SyntaxState
 	{
 	public:
-		Syn_CaseState(bool* hasReturn, const Token& ID);
-		~Syn_CaseState();
+		Syn_CaseDefaultState(bool* hasReturn, const Token& ID);
+		~Syn_CaseDefaultState();
 
 		eRETURN_STATE Update(AnalizadorSintactico* syntactic);
 
 	private:
-		eRETURN_STATE Constant(AnalizadorSintactico* syntactic);
 		eRETURN_STATE Dobledot(AnalizadorSintactico* syntactic);
 		eRETURN_STATE OpenBrackets(AnalizadorSintactico* syntactic);
 		eRETURN_STATE CloseBrackets(AnalizadorSintactico* syntactic);
@@ -21,7 +20,6 @@ namespace Compilador
 		bool* m_hasReturn;
 
 		Token m_ID;
-		LogExpNode* m_log = nullptr;
+
 	};
 }
-

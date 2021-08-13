@@ -34,7 +34,7 @@ namespace Compilador
 	{
 		std::string errorMsg = "<SEMANTIC> ";
 		errorMsg.append(errorString);
-		return m_errorManager->AddError(gcnew String(errorMsg.c_str()), eERROR_TYPE::SYNTACTIC);
+		return m_errorManager->AddError(gcnew String(errorMsg.c_str()), eERROR_TYPE::SEMANTIC);
 	}
 
 
@@ -810,6 +810,16 @@ namespace Compilador
 				}
 			}
 		}
+		else if (node->m_type == eSTATEMENT_TYPE::DEFAULT)
+		{
+			for (int i = 0; i < node->m_subStatements.size(); i++)
+			{
+				if (!SearchStatementTrees(node->m_subStatements[i], funcName))
+				{
+					return false;
+				}
+			}
+		}
 		else if (node->m_type == eSTATEMENT_TYPE::FOR)
 		{
 			std::string type = "bool";
@@ -957,7 +967,7 @@ namespace Compilador
 
 				if (type != "")
 				{
-					m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[0], funcName);
+					m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[i], funcName);
 					m_intermidiateCode += "\n";
 				}
 			}
@@ -992,6 +1002,16 @@ namespace Compilador
 				{
 					m_intermidiateCode += CreateIntermidiateCode(node->m_logExpresions[0], funcName);
 					m_intermidiateCode += "\n";
+				}
+			}
+		}
+		else if (node->m_type == eSTATEMENT_TYPE::SWITCH)
+		{
+			for (int i = 0; i < node->m_subStatements.size(); i++)
+			{
+				if (!SearchStatementTrees(node->m_subStatements[i], funcName))
+				{
+					return false;
 				}
 			}
 		}

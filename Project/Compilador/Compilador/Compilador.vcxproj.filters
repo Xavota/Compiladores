@@ -153,6 +153,9 @@
     <ClInclude Include="StatementNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Syn_CaseDefaultState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compilador.cpp">
@@ -291,6 +294,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StatementNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Syn_CaseDefaultState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

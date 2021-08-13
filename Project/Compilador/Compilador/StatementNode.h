@@ -14,6 +14,7 @@ namespace Compilador
 		NONE = -1,
 		ASIGN,
 		CASE,
+		DEFAULT,
 		DIM,
 		FOR,
 		FUNC_CALL,
