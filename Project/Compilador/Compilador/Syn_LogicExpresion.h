@@ -29,7 +29,5 @@ namespace Compilador
 		LogExpNode** m_root;
 
 		int m_startLine;
-
-		std::vector<Token> m_newOrder;
 	};
 }

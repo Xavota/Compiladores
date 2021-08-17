@@ -310,7 +310,6 @@ namespace Compilador
 					tok = syntactic->GetNextToken();
 					if (tok.GetLexeme() == "]")
 					{
-						Left->SetDim(tok.GetLine());
 						Left->m_extraInfo = eNODE_INFO::DIM;
 						Left->AddSubTree(result);
 						return Left;
